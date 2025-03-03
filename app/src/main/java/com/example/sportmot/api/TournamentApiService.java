@@ -9,6 +9,11 @@ import java.util.List;
 
 public interface TournamentApiService {
     @GET("/rest/tournaments")
-    //Call<List<Tournament>> getTournaments();
     Call<List<Tournament>> getCurrentTournaments(@Query("date") String date);
+
+    @GET("/rest/tournaments")
+    Call<List<Tournament>> getUpcomingTournaments(@Query("date") String date);
+
+    @GET("/rest/tournaments")
+    Call<List<Tournament>> getOldTournaments(@Query("date") String date);
 }

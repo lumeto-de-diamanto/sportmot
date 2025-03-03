@@ -18,6 +18,8 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.sportmot.R;
 import com.example.sportmot.databinding.ActivityMainBinding;
 import com.example.sportmot.ui.tournament.CurrentTournamentActivity;
+import com.example.sportmot.ui.tournament.OldTournamentsActivity;
+import com.example.sportmot.ui.tournament.UpcomingTournamentActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 public class homepageActivity extends AppCompatActivity {
@@ -30,6 +32,19 @@ public class homepageActivity extends AppCompatActivity {
         Button button = findViewById(R.id.mot_i_dag);
         button.setOnClickListener(v -> {
             Intent intent = new Intent(homepageActivity.this, CurrentTournamentActivity.class);
+            startActivity(intent);
+        });
+
+        // ✅ Button for Upcoming Tournaments
+        Button upcomingButton = findViewById(R.id.naestu_mot);
+        upcomingButton.setOnClickListener(v -> {
+            Intent intent = new Intent(homepageActivity.this, UpcomingTournamentActivity.class);
+            startActivity(intent);
+        });
+
+        Button oldButton = findViewById(R.id.gomul_mot);
+        oldButton.setOnClickListener(v -> {
+            Intent intent = new Intent(homepageActivity.this, OldTournamentsActivity.class);
             startActivity(intent);
         });
     }

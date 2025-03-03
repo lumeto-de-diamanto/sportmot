@@ -25,6 +25,8 @@
         </activity>
 
         <activity android:name=".ui.tournament.CurrentTournamentActivity" />
+        <activity android:name=".ui.tournament.UpcomingTournamentActivity" />
+        <activity android:name=".ui.tournament.OldTournamentsActivity" />
     </application>
 
 </manifest>
