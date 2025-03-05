@@ -31,7 +31,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_current_tournament);
+        //setContentView(R.layout.activity_current_tournament);
 
         tournamentInfo = findViewById(R.id.tournament_info);
         apiService = RetrofitClient.getClient().create(TournamentApiService.class);

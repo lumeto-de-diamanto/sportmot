@@ -37,7 +37,6 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
         til_baka.setOnClickListener((v) ->
                 onBackPressed()
         );
-        setContentView(R.layout.activity_current_tournament);
 
         tournamentInfo = findViewById(R.id.tournament_info);
         apiService = RetrofitClient.getClient().create(TournamentApiService.class);
