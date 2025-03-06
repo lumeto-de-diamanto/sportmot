@@ -26,18 +26,17 @@ public class CurrentTournamentActivity extends AppCompatActivity {
     private TextView tournamentInfo;
     private TournamentApiService apiService;
 
-    //hæhæ, við þurfum að greiða úr þessari flækju. Þetta er bæði frá
-    //Bryndísi og Grétari
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_current_tournament);
 
+        setContentView(R.layout.activity_tournament_list);
         tournamentInfo = findViewById(R.id.tournament_info);
         apiService = RetrofitClient.getClient().create(TournamentApiService.class);
 
         fetchCurrentTournaments();  // Fetch all tournaments now
-        setContentView(R.layout.activity_tournament_list);
+
         Button til_baka = findViewById(R.id.til_baka);
         TextView tournament_title = findViewById(R.id.tournament_title);
         tournament_title.setText("Mót í dag");

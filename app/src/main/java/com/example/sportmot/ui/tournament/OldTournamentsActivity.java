@@ -27,21 +27,16 @@ public class OldTournamentsActivity extends AppCompatActivity {
     private TextView tournamentInfo;
     private TournamentApiService apiService;
 
-    /*Hæ Tobba hérna, þarf að skoða þetta líka
-    flækja í gangi og þarf að sjá hvað á að vera og
-    hvað fær að fjúka ;)
-    * */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // setContentView(R.layout.activity_current_tournament);
 
+        setContentView(R.layout.activity_tournament_list);
         tournamentInfo = findViewById(R.id.tournament_info);
         apiService = RetrofitClient.getClient().create(TournamentApiService.class);
 
         fetchOldTournaments(); // Fetch old tournaments
-        setContentView(R.layout.activity_tournament_list);
         Button til_baka = findViewById(R.id.til_baka);
         TextView tournament_title = findViewById(R.id.tournament_title);
         tournament_title.setText("Gömul mót");
