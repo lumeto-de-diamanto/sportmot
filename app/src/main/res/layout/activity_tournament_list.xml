@@ -56,4 +56,9 @@
                 android:textSize="18sp" />
         </LinearLayout>
     </ScrollView>
+    <FrameLayout
+        android:id="@+id/ViewGameScheduleFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

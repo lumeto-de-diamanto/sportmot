@@ -1,6 +1,7 @@
 package com.example.sportmot.ui.tournament;
 
 import android.content.Intent;
+import android.widget.FrameLayout;
 import android.os.Bundle;
 import com.example.sportmot.R;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,13 +18,18 @@ import com.example.sportmot.R;
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
+import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import java.util.List;
 import java.time.LocalDate;
+import android.widget.LinearLayout;
+import android.view.LayoutInflater;
+
 
 public class CurrentTournamentActivity extends AppCompatActivity {
+    private LinearLayout tournamentContainer;
     private TextView tournamentInfo;
     private TournamentApiService apiService;
 
@@ -32,17 +39,29 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_current_tournament);
 
         setContentView(R.layout.activity_tournament_list);
-        tournamentInfo = findViewById(R.id.tournament_info);
+        tournamentContainer = findViewById(R.id.tournament_list);
         apiService = RetrofitClient.getClient().create(TournamentApiService.class);
 
         fetchCurrentTournaments();  // Fetch all tournaments now
 
-        Button til_baka = findViewById(R.id.til_baka);
-        TextView tournament_title = findViewById(R.id.tournament_title);
-        tournament_title.setText("Mót í dag");
-        til_baka.setOnClickListener((v) ->
-                onBackPressed()
-        );
+        //Button til_baka = findViewById(R.id.til_baka);
+        //TextView tournament_title = findViewById(R.id.tournament_title);
+        //tournament_title.setText("Mót í dag");
+        //til_baka.setOnClickListener((v) ->
+          //      onBackPressed());
+
+        //Button view_schedule = findViewById(R.id.view_schedule);
+        //view_schedule.setOnClickListener(v -> {
+          //  ViewGameScheduleFragment fragment = new ViewGameScheduleFragment();
+
+            //View formFragment = findViewById(R.id.formFragment);
+            //if (formFragment != null) { // Prevent NullPointerException
+              //  formFragment.setVisibility(View.VISIBLE);
+           // }
+            //getSupportFragmentManager().beginTransaction()
+              //      .replace(R.id.formFragment, fragment)
+                //  .commit();
+     //   });
     }
 
     // Get today's date in yyyy-MM-dd format
@@ -152,18 +171,37 @@ public class CurrentTournamentActivity extends AppCompatActivity {
 
     // ✅ Display the ongoing tournaments
     private void displayTournaments(List<Tournament> tournaments) {
-        StringBuilder info = new StringBuilder();
+        tournamentContainer.removeAllViews(); // Clear previous items
+
         for (Tournament tournament : tournaments) {
-            info.append("Tournament: ").append(tournament.getTournamentName())
-                    .append("\nDate: ").append(formatDate(tournament.getTournamentDate()))
-                    .append("\nStart Time: ").append(formatTime(tournament.getStartTime()))
-                    .append("\nFields: ").append(tournament.getFields())
-                    .append("\nGroups: ").append(tournament.getNumberOfGroups())
-                    .append("\nTeams per Group: ").append(tournament.getTeamsPerGroup())
-                    .append("\nGame Length: ").append(tournament.getGameLength())
-                    .append(" mins\n\n");
+            View tournamentView = LayoutInflater.from(this).inflate(R.layout.tournament_item, tournamentContainer, false);
+
+            TextView name = tournamentView.findViewById(R.id.tournament_name);
+            TextView details = tournamentView.findViewById(R.id.tournament_details);
+            Button viewSchedule = tournamentView.findViewById(R.id.view_schedule);
+
+            name.setText(tournament.getTournamentName());
+            details.setText("Date: " + formatDate(tournament.getTournamentDate()));
+
+            viewSchedule.setOnClickListener(v -> showScheduleFragment());
+
+            tournamentContainer.addView(tournamentView);
         }
-        tournamentInfo.setText(info.toString());
+    }
+
+    private void showScheduleFragment() {
+        View container = findViewById(R.id.ViewGameScheduleFragment);
+        if (container != null) {
+            container.setVisibility(View.VISIBLE);  // Make sure the container is visible
+        } else {
+            Log.e("FragmentError", "Fragment container not found!");
+        }
+
+        // Load the fragment into the container
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.ViewGameScheduleFragment, new ViewGameScheduleFragment())
+                .addToBackStack(null)  // Allow going back
+                .commit();
     }
 
     // ✅ Format date from List<Integer> to yyyy-MM-dd
@@ -181,4 +219,5 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         }
         return "Unknown Time";
     }
+
 }
