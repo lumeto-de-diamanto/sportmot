@@ -20,6 +20,17 @@
             android:textSize="18sp"
             android:padding="16dp" />
 
+        <Button
+            android:id="@+id/view_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sjá leikjadagskrá" />
+
     </ScrollView>
+    <FrameLayout
+        android:id="@+id/ViewGameScheduleFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 </LinearLayout>
