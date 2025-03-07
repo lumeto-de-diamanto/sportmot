@@ -40,15 +40,16 @@ public class CurrentTournamentActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_tournament_list);
         tournamentContainer = findViewById(R.id.tournament_list);
+        tournamentInfo = findViewById(R.id.tournament_info);
         apiService = RetrofitClient.getClient().create(TournamentApiService.class);
 
         fetchCurrentTournaments();  // Fetch all tournaments now
 
-        //Button til_baka = findViewById(R.id.til_baka);
-        //TextView tournament_title = findViewById(R.id.tournament_title);
-        //tournament_title.setText("Mót í dag");
-        //til_baka.setOnClickListener((v) ->
-          //      onBackPressed());
+        Button til_baka = findViewById(R.id.til_baka);
+        TextView tournament_title = findViewById(R.id.tournament_title);
+        tournament_title.setText("Mót í dag");
+        til_baka.setOnClickListener((v) ->
+                onBackPressed());
 
         //Button view_schedule = findViewById(R.id.view_schedule);
         //view_schedule.setOnClickListener(v -> {
