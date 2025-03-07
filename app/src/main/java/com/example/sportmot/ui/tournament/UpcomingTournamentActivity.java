@@ -17,7 +17,7 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tournament_list);
+        setContentView(R.layout.activity_coming_tournament);
         Button til_baka = findViewById(R.id.til_baka);
         Button skra_lid = findViewById(R.id.skra_lid);
         TextView tournament_title = findViewById(R.id.tournament_title);
