@@ -74,6 +74,7 @@ public class Team implements Parcelable {
 
     public void setClub(Club club) {
         this.club = club;
+    }
 
     public String getTeamId() {
         return teamId;

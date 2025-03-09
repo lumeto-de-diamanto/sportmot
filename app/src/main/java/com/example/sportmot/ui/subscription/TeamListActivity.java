@@ -5,6 +5,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.sportmot.data.entities.Club;
 import com.example.sportmot.data.entities.Team;
 
 import java.util.Arrays;
@@ -12,10 +14,12 @@ import java.util.List;
 import com.example.sportmot.R;
 
 public class TeamListActivity extends AppCompatActivity {
+
+    private Club ClubA = new Club();
     private List<Team> teams = Arrays.asList(
-            new Team("team1", "Team A"),
-            new Team("team2", "Team B"),
-            new Team("team3", "Team C")
+            new Team("team1", "Team A",ClubA, "1"),
+            new Team("team2", "Team B",ClubA, "1"),
+            new Team("team3", "Team C",ClubA, "1")
     );
 
     private SubscriptionManager subscriptionManager;

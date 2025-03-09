@@ -96,8 +96,10 @@ public class RegisterTeamFormFragment extends Fragment {
             return;
         }
 
+        String teamId = "TEAM_" + System.currentTimeMillis();
+
         TeamApiService apiService = RetrofitClient.getApiService();
-        Team team = new Team(teamName, teamClub, teamLevel );
+        Team team = new Team(teamId, teamName, teamClub, teamLevel );
 
         Call<String> call = apiService.createTeam(team);
         call.enqueue(new Callback<String>(){
