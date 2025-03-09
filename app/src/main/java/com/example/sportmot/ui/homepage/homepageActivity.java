@@ -20,6 +20,7 @@ import com.example.sportmot.databinding.ActivityMainBinding;
 import com.example.sportmot.ui.tournament.CurrentTournamentActivity;
 import com.example.sportmot.ui.tournament.OldTournamentsActivity;
 import com.example.sportmot.ui.tournament.UpcomingTournamentActivity;
+import com.example.sportmot.ui.userpage.LoginActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 public class homepageActivity extends AppCompatActivity {
@@ -47,9 +48,12 @@ public class homepageActivity extends AppCompatActivity {
             Intent intent = new Intent(homepageActivity.this, OldTournamentsActivity.class);
             startActivity(intent);
         });
+
+        Button loginButton = findViewById(R.id.login_page);
+        loginButton.setOnClickListener(v -> {
+            Intent intent = new Intent(homepageActivity.this, LoginActivity.class);
+            startActivity(intent);
+        });
     }
 }
-
-
-
 

@@ -36,6 +36,14 @@
             android:name=".ui.tournament.UpcomingTournamentActivity"
             android:theme="@style/Theme.Sportmót">
         </activity>
+        <activity
+            android:name=".ui.userpage.LoginActivity"
+            android:theme="@style/Theme.Sportmót">
+        </activity>
+        <activity
+            android:name=".ui.userpage.SignupActivity"
+            android:theme="@style/Theme.Sportmót">
+        </activity>
     </application>
 
 </manifest>
