@@ -21,6 +21,7 @@ import com.example.sportmot.ui.tournament.CurrentTournamentActivity;
 import com.example.sportmot.ui.tournament.OldTournamentsActivity;
 import com.example.sportmot.ui.tournament.UpcomingTournamentActivity;
 import com.google.android.material.snackbar.Snackbar;
+import com.example.sportmot.ui.subscription.SubscriptionActivity;
 
 public class homepageActivity extends AppCompatActivity {
 
@@ -47,6 +48,10 @@ public class homepageActivity extends AppCompatActivity {
             Intent intent = new Intent(homepageActivity.this, OldTournamentsActivity.class);
             startActivity(intent);
         });
+    }
+    public void openSubscription(View view) {
+        Intent intent = new Intent(this, SubscriptionActivity.class);
+        startActivity(intent);
     }
 }
 

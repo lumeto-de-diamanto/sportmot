@@ -33,7 +33,8 @@
         app:layout_constraintTop_toBottomOf="@id/textView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="30dp" />
+        android:layout_margin="30dp"
+        android:onClick="openSubscription"/>
 
     <!-- Button for 'Mót í dag' below 'Mín mót' -->
     <Button

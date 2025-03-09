@@ -50,19 +50,6 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         tournament_title.setText("Mót í dag");
         til_baka.setOnClickListener((v) ->
                 onBackPressed());
-
-        //Button view_schedule = findViewById(R.id.view_schedule);
-        //view_schedule.setOnClickListener(v -> {
-          //  ViewGameScheduleFragment fragment = new ViewGameScheduleFragment();
-
-            //View formFragment = findViewById(R.id.formFragment);
-            //if (formFragment != null) { // Prevent NullPointerException
-              //  formFragment.setVisibility(View.VISIBLE);
-           // }
-            //getSupportFragmentManager().beginTransaction()
-              //      .replace(R.id.formFragment, fragment)
-                //  .commit();
-     //   });
     }
 
     // Get today's date in yyyy-MM-dd format
