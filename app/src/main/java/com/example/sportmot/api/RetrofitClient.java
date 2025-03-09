@@ -32,4 +32,13 @@ public class RetrofitClient {
         }
         return retrofit;
     }
+    public static TeamApiService getApiService() {
+        return getClient().create(TeamApiService.class);
+    }
+
+    public static ClubApiService getClubApiService() {
+        return getClient().create(ClubApiService.class);
+    }
 }
+
+
