@@ -5,16 +5,13 @@ import android.view.View;
 import android.widget.Button;
 import com.example.sportmot.R;
 import androidx.appcompat.app.AppCompatActivity;
-import java.time.LocalTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import android.os.Bundle;
+
 import android.util.Log;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.sportmot.R;
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
@@ -22,9 +19,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import java.util.List;
-import java.time.LocalDate;
 
-import com.example.sportmot.ui.tournament.fragment.RegisterFormFragment;
+import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
 
 
 public class UpcomingTournamentActivity extends AppCompatActivity {
@@ -44,7 +40,7 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
         );
 
         skra_lid.setOnClickListener(v ->{
-            RegisterFormFragment fragment = new RegisterFormFragment();
+            RegisterTeamFormFragment fragment = new RegisterTeamFormFragment();
 
             findViewById(R.id.formFragment).setVisibility(View.VISIBLE);
 
