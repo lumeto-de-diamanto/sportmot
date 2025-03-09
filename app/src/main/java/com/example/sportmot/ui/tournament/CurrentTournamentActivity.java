@@ -32,7 +32,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
     private LinearLayout tournamentContainer;
     private TextView tournamentInfo;
     private TournamentApiService apiService;
-
+    //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
