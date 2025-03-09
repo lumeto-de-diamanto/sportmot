@@ -5,6 +5,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitClient {
 
@@ -27,6 +28,9 @@ public class RetrofitClient {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(client)  // Use the client with logging interceptor
+                    // handling of plain String responses:
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    // Keep Gson for JSON objects:
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }

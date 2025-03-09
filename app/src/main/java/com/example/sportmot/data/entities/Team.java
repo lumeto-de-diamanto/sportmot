@@ -1,5 +1,6 @@
 package com.example.sportmot.data.entities;
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,9 +8,11 @@ public class Team implements Parcelable {
     private String teamName;
     private Club club;
     private String level;
+    private String teamId;
 
     // Constructor
-    public Team(String teamName, Club club, String level) {
+    public Team(String teamId,String teamName, Club club, String level) {
+        this.teamId = teamId;
         this.teamName = teamName;
         this.club = club;
         this.level = level;
@@ -52,6 +55,7 @@ public class Team implements Parcelable {
         return teamName;
     }
 
+
     public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
@@ -70,6 +74,10 @@ public class Team implements Parcelable {
 
     public void setClub(Club club) {
         this.club = club;
+
+    public String getTeamId() {
+        return teamId;
+
     }
 
 }

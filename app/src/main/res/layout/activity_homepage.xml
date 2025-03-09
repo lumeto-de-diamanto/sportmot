@@ -33,7 +33,8 @@
         app:layout_constraintTop_toBottomOf="@id/textView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="30dp" />
+        android:layout_margin="30dp"
+        android:onClick="openSubscription"/>
 
     <!-- Button for 'Mót í dag' below 'Mín mót' -->
     <Button
@@ -78,6 +79,21 @@
         android:textColorLink="#673AB7"
         android:textSize="34sp"
         app:layout_constraintTop_toBottomOf="@id/naestu_mot"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="30dp" />
+
+    <!-- Button for 'Login/signup' below 'Næstu mót' -->
+    <Button
+        android:id="@+id/login_page"
+        android:layout_width="315dp"
+        android:layout_height="115dp"
+        android:padding="16dp"
+        android:text="Login/Signup"
+        android:textColor="#0B0B0B"
+        android:textColorLink="#673AB7"
+        android:textSize="34sp"
+        app:layout_constraintTop_toBottomOf="@id/gomul_mot"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="30dp" />

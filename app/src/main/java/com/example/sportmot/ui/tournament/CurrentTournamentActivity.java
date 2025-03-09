@@ -8,13 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
-import com.example.sportmot.R;
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
@@ -32,7 +29,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
     private LinearLayout tournamentContainer;
     private TextView tournamentInfo;
     private TournamentApiService apiService;
-
+    //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,19 +47,6 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         tournament_title.setText("Mót í dag");
         til_baka.setOnClickListener((v) ->
                 onBackPressed());
-
-        //Button view_schedule = findViewById(R.id.view_schedule);
-        //view_schedule.setOnClickListener(v -> {
-          //  ViewGameScheduleFragment fragment = new ViewGameScheduleFragment();
-
-            //View formFragment = findViewById(R.id.formFragment);
-            //if (formFragment != null) { // Prevent NullPointerException
-              //  formFragment.setVisibility(View.VISIBLE);
-           // }
-            //getSupportFragmentManager().beginTransaction()
-              //      .replace(R.id.formFragment, fragment)
-                //  .commit();
-     //   });
     }
 
     // Get today's date in yyyy-MM-dd format
@@ -159,7 +143,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         return ongoingTournaments;
     }
 
-    // ✅ Check if current time is between start and end
+    // Check if current time is between start and end
     private boolean isBetween(Calendar start, Calendar end, int currentHour, int currentMinute) {
         int startHour = start.get(Calendar.HOUR_OF_DAY);
         int startMinute = start.get(Calendar.MINUTE);
@@ -170,7 +154,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
                 (currentHour < endHour || (currentHour == endHour && currentMinute <= endMinute));
     }
 
-    // ✅ Display the ongoing tournaments
+    // Display the ongoing tournaments
     private void displayTournaments(List<Tournament> tournaments) {
         tournamentContainer.removeAllViews(); // Clear previous items
 
@@ -205,7 +189,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
                 .commit();
     }
 
-    // ✅ Format date from List<Integer> to yyyy-MM-dd
+    //  Format date from List<Integer> to yyyy-MM-dd
     private String formatDate(List<Integer> date) {
         if (date != null && date.size() == 3) {
             return String.format("%04d-%02d-%02d", date.get(0), date.get(1), date.get(2));
@@ -213,7 +197,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         return "Unknown Date";
     }
 
-    // ✅ Format time from List<Integer> to HH:mm
+    //  Format time from List<Integer> to HH:mm
     private String formatTime(List<Integer> time) {
         if (time != null && time.size() >= 2) {
             return String.format("%02d:%02d", time.get(0), time.get(1));
