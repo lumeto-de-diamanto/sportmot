@@ -45,6 +45,9 @@ public class TournamentListActivity extends AppCompatActivity {
         tournamentListLayout = findViewById(R.id.tournament_list);
         Button backButton = findViewById(R.id.til_baka);
 
+        TextView tournament_title = findViewById(R.id.tournament_title);
+        tournament_title.setText("Öll mót");
+
         backButton.setOnClickListener(v -> finish());
 
         tournamentApiService = RetrofitClient.getClient().create(TournamentApiService.class);
