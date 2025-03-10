@@ -17,9 +17,9 @@ public class TeamListActivity extends AppCompatActivity {
 
     private Club ClubA = new Club();
     private List<Team> teams = Arrays.asList(
-            new Team("team1", "Team A",ClubA, "1"),
-            new Team("team2", "Team B",ClubA, "1"),
-            new Team("team3", "Team C",ClubA, "1")
+            new Team(123, "Team A",ClubA, "1"),
+            new Team(456, "Team B",ClubA, "1"),
+            new Team(789, "Team C",ClubA, "1")
     );
 
     private SubscriptionManager subscriptionManager;
@@ -35,7 +35,10 @@ public class TeamListActivity extends AppCompatActivity {
                 teams.stream().map(Team::getTeamName).toArray(String[]::new)));
 
         listView.setOnItemClickListener((adapterView, view, position, id) -> {
-            subscriptionManager.subscribeToTeam(teams.get(position).getTeamId());
+            int teamId = teams.get(position).getTeamId();
+            subscriptionManager.subscribeToTeam(String.valueOf(teamId));
+
+            // Finish the activity or close the current screen
             finish();
         });
     }

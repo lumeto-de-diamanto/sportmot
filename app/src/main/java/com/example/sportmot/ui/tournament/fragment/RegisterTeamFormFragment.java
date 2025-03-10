@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sportmot.api.ClubApiService;
@@ -22,12 +23,18 @@ import com.example.sportmot.data.entities.Club;
 import com.example.sportmot.data.entities.Team;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class RegisterTeamFormFragment extends Fragment {
     private TeamApiService teamApiService;
@@ -56,20 +63,38 @@ public class RegisterTeamFormFragment extends Fragment {
     }
 
     private void loadClubs() {
-        // Fetch the list of clubs from the API
-        TeamApiService apiService = RetrofitClient.getApiService();
-        Call<List<Club>> call = apiService.loadClubs();  // Assuming the endpoint exists
+        clubApiService = RetrofitClient.getClubApiService();
+        Call<List<Club>> call = clubApiService.getClubs();
 
         call.enqueue(new Callback<List<Club>>() {
             @Override
             public void onResponse(Call<List<Club>> call, Response<List<Club>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Club> clubs = response.body();
-                    // Populate the spinner with the list of clubs
-                    ArrayAdapter<Club> adapter = new ArrayAdapter<>(getContext(),
-                            android.R.layout.simple_spinner_item, clubs);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+                    ArrayAdapter<Club> adapter = new ArrayAdapter<Club>(getContext(),
+                            android.R.layout.simple_spinner_item, clubs) {
+                        @Override
+                        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                            View view = super.getDropDownView(position, convertView, parent);
+                            TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                            textView.setText(clubs.get(position).getName());
+                            return view;
+                        }
+
+                        @Override
+                        public View getView(int position, View convertView, ViewGroup parent) {
+                            View view = super.getView(position, convertView, parent);
+                            TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                            textView.setText(clubs.get(position).getName());
+                            return view;
+                        }
+                    };
+
+                    // Set the adapter to the Spinner
                     teamClubInput.setAdapter(adapter);
+
                 } else {
                     Toast.makeText(getContext(), "Failed to load clubs", Toast.LENGTH_SHORT).show();
                 }
@@ -82,61 +107,72 @@ public class RegisterTeamFormFragment extends Fragment {
         });
     }
 
-    private void registerTeam(){
+
+    private void registerTeam() {
         String teamName = teamNameInput.getText().toString().trim();
         Club teamClub = (Club) teamClubInput.getSelectedItem();
         String teamLevel = teamLevelInput.getText().toString().trim();
 
-        Log.d("RegisterTeam", "Button clicked!");
+        // Log the values to check for missing fields
+        Log.d("RegisterTeam", "Team Name: " + teamName);
+        Log.d("RegisterTeam", "Team Level: " + teamLevel);
+        Log.d("RegisterTeam", "Selected Club: " + (teamClub != null ? teamClub.getName() : "None"));
 
 
-        //check if input is empty
-        if(teamName.isEmpty() || teamLevel.isEmpty() ){
-            Toast.makeText(getContext(),"Vinsamlegast fyllið  alla reiti", Toast.LENGTH_SHORT).show();
+        // Check if any fields are empty and log the missing ones
+        if (teamName.isEmpty()) {
+            Log.e("RegisterTeam", "Team Name is missing!");
+        }
+        if (teamLevel.isEmpty()) {
+            Log.e("RegisterTeam", "Team Level is missing!");
+        }
+        if (teamClub == null) {
+            Log.e("RegisterTeam", "Club is missing or not selected!");
+        }
+
+        if (teamName.isEmpty() || teamLevel.isEmpty()) {
+            Toast.makeText(getContext(), "Vinsamlegast fyllið alla reiti", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String teamId = "TEAM_" + System.currentTimeMillis();
+        if (teamClub == null) {
+            Log.e("Spinner Error", "No club selected!");
+            return;
+        }
+
+
+
+
+        int teamId = (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
+
+        Team team = new Team(teamId,teamName, teamClub,teamLevel);
+        Log.d("Team Registration", "Sending Team: " + team.toString());
 
         TeamApiService apiService = RetrofitClient.getApiService();
-        Team team = new Team(teamId, teamName, teamClub, teamLevel );
-
         Call<String> call = apiService.createTeam(team);
-        call.enqueue(new Callback<String>(){
-           /* @Override
-            public void onResponese(Call<String> call, Response<String> response){
-                if(response.isSuccessful()){
-                    Toast.makeText(getContext(), "Skráning tókst", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getContext(), "Skráning mistókst", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<String> call, Throwable t){
-                Toast.makeText(getContext(),"Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }*/
-
+        call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    // Success: The team was created successfully
-                    Log.d("Skráning liðs", "Skráning liðs tókst");
+                    Log.d("Team Registration", "Team created successfully.");
                 } else {
-                    // Failure: Something went wrong on the server side
-                    Log.e("Skráning liðs", "Skráning liðs mistókst. Response code: " + response.code());
+                    try {
+                        Log.e("Team Registration", "Error response: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        Log.e("Team Registration", "Error reading response body", e);
+                    }
+                    Log.e("Team Registration", "Response code: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                // Handle error: No internet, server is down, etc.
-                Log.e("Skráning liðs", "Error: " + t.getMessage());
+                Log.e("Team Registration", "Error: " + t.getMessage());
             }
         });
-
-
-
     }
 
+
 }
+

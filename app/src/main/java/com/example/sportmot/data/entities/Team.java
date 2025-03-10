@@ -8,10 +8,10 @@ public class Team implements Parcelable {
     private String teamName;
     private Club club;
     private String level;
-    private String teamId;
+    private int teamId;
 
     // Constructor
-    public Team(String teamId,String teamName, Club club, String level) {
+    public Team(int teamId,String teamName, Club club, String level) {
         this.teamId = teamId;
         this.teamName = teamName;
         this.club = club;
@@ -76,9 +76,19 @@ public class Team implements Parcelable {
         this.club = club;
     }
 
-    public String getTeamId() {
+    public int getTeamId() {
         return teamId;
 
+    }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "teamID=" + teamId +
+                ", teamName='" + teamName + '\'' +
+                ", level='" + level + '\'' +
+                ", club=" + (club != null ? club.getName() : "No club") +
+                '}';
     }
 
 }

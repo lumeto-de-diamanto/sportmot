@@ -1,28 +1,28 @@
 package com.example.sportmot.data.entities;
 
 public class Club {
-    private Long id;
-    private String name;
+    private Integer clubID;
+    private String clubName;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public int getId() {
+        return clubID;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(int id) {
+        this.clubID = id;
     }
+
 
     public String getName() {
-        return name;
+        return clubName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.clubName = name;
     }
 
     @Override
     public String toString() {
-        return name;
+        return clubName;
     }
 }

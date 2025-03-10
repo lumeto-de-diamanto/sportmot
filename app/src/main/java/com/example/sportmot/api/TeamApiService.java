@@ -15,6 +15,4 @@ public interface TeamApiService {
     @POST("/addteam")
     Call<String> createTeam(@Body Team team);
 
-    @GET("rest/loadClubs")
-    Call<List<Club>> loadClubs();
 }

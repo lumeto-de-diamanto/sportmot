@@ -7,6 +7,9 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface ClubApiService {
-    @GET("rest/loadClubs")
-    Call<List<Club>> loadClubs();
+
+    @GET("/rest/clubs")
+    Call<List<Club>> getClubs();
 }
+
+
