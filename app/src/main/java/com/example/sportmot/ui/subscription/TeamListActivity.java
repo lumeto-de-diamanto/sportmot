@@ -3,6 +3,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +13,8 @@ import com.example.sportmot.data.entities.Team;
 import java.util.Arrays;
 import java.util.List;
 import com.example.sportmot.R;
+import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
+import com.example.sportmot.ui.tournament.fragment.MapFragment;
 
 public class TeamListActivity extends AppCompatActivity {
 
@@ -41,5 +44,6 @@ public class TeamListActivity extends AppCompatActivity {
             // Finish the activity or close the current screen
             finish();
         });
+
     }
 }

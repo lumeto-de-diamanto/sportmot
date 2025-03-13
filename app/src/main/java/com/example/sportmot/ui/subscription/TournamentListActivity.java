@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,6 +19,8 @@ import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
 import com.example.sportmot.R;
+import com.example.sportmot.ui.tournament.fragment.MapFragment;
+import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +44,7 @@ public class TournamentListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tournament_list);
+        Button kortHnappur = findViewById(R.id.kort);
 
         tournamentListLayout = findViewById(R.id.tournament_list);
         Button backButton = findViewById(R.id.til_baka);
@@ -54,6 +58,19 @@ public class TournamentListActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
 
         loadTournaments();
+
+        kortHnappur.setOnClickListener(v ->{
+            MapFragment mapFragment = new MapFragment();
+
+            // Make the fragment container visible (if it's hidden initially)
+            findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+
+            // Begin the fragment transaction to replace the container with the new fragment
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, mapFragment) // Replace the container with MapFragment
+                    .addToBackStack(null) // Optional: add to back stack to allow navigation back
+                    .commit();
+        });
     }
 
     private void loadTournaments() {

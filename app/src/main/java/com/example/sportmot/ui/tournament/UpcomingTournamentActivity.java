@@ -26,7 +26,7 @@ import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
 public class UpcomingTournamentActivity extends AppCompatActivity {
     private TextView tournamentInfo;
     private TournamentApiService apiService;
-/*hæhó, ég aftur sama dæmi og áður laga til ;)*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
