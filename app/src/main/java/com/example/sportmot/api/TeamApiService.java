@@ -12,7 +12,7 @@ import retrofit2.http.POST;
 
 //Connect to api
 public interface TeamApiService {
-    @POST("/addteam")
+    @POST("/rest/addteam")
     Call<String> createTeam(@Body Team team);
 
 }
