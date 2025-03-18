@@ -9,6 +9,7 @@ import com.example.sportmot.R;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+import android.content.SharedPreferences;
 
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
@@ -44,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         signUpRedirectButton.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
             startActivity(intent);
+            finish();
         });
     }
 
@@ -64,6 +66,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     statusTextView.setText(response.body());
+                    SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("user_name", email);
+                    editor.putString("user_password", password);
+                    editor.apply();
+                    LoginActivity.this.finish();
                     //navigateToHomePage();
                 } else {
                     statusTextView.setText("Invalid credentials. Try again.");

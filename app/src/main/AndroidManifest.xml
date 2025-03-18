@@ -15,14 +15,18 @@
         android:theme="@style/Theme.Sportmót"
         tools:targetApi="31">
         <activity
+            android:name=".ui.startpage.startpageActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Sportmót">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.homepage.homepageActivity"
             android:exported="true"
             android:theme="@style/Theme.Sportmót">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.tournament.CurrentTournamentActivity"
