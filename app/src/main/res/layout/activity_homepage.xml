@@ -10,11 +10,12 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="400dp"
-        android:layout_height="60dp"
+        android:layout_height="100dp"
         android:layout_margin="30dp"
+        android:gravity="center"
         android:text="Sportmót"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="#0B0B0B"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,79 +26,85 @@
     <Button
         android:id="@+id/min_mot"
         android:layout_width="315dp"
-        android:layout_height="115dp"
+        android:layout_height="90dp"
+        android:layout_margin="20dp"
+        android:onClick="openSubscription"
         android:padding="16dp"
         android:text="Mín mót"
         android:textColor="#0B0B0B"
         android:textColorLink="#673AB7"
         android:textSize="34sp"
-        app:layout_constraintTop_toBottomOf="@id/textView"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/mot_i_dag"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="30dp"
-        android:onClick="openSubscription"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView" />
 
     <!-- Button for 'Mót í dag' below 'Mín mót' -->
     <Button
         android:id="@+id/mot_i_dag"
         android:layout_width="315dp"
-        android:layout_height="115dp"
+        android:layout_height="90dp"
+        android:layout_margin="20dp"
         android:padding="16dp"
         android:text="Mót í dag"
         android:textColor="#0B0B0B"
         android:textColorLink="#673AB7"
         android:textSize="34sp"
-        app:layout_constraintTop_toBottomOf="@id/min_mot"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/naestu_mot"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="30dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/min_mot" />
 
 
     <!-- Button for 'Næstu mót' below 'Mót í dag' -->
     <Button
         android:id="@+id/naestu_mot"
         android:layout_width="315dp"
-        android:layout_height="115dp"
+        android:layout_height="90dp"
+        android:layout_margin="20dp"
         android:padding="16dp"
         android:text="Næstu mót"
         android:textColor="#0B0B0B"
         android:textColorLink="#673AB7"
         android:textSize="34sp"
-        app:layout_constraintTop_toBottomOf="@id/mot_i_dag"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/gomul_mot"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="30dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mot_i_dag" />
 
 
     <!-- Button for 'Gömul mót' below 'Næstu mót' -->
     <Button
         android:id="@+id/gomul_mot"
         android:layout_width="315dp"
-        android:layout_height="115dp"
+        android:layout_height="90dp"
+        android:layout_margin="20dp"
         android:padding="16dp"
         android:text="Gömul mót"
         android:textColor="#0B0B0B"
         android:textColorLink="#673AB7"
         android:textSize="34sp"
-        app:layout_constraintTop_toBottomOf="@id/naestu_mot"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/log_out"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="30dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/naestu_mot" />
 
-    <!-- Button for 'Login/signup' below 'Næstu mót' -->
     <Button
-        android:id="@+id/login_page"
+        android:id="@+id/log_out"
         android:layout_width="315dp"
-        android:layout_height="115dp"
+        android:layout_height="90dp"
+        android:layout_margin="20dp"
         android:padding="16dp"
-        android:text="Login/Signup"
+        android:text="Skrá út"
         android:textColor="#0B0B0B"
         android:textColorLink="#673AB7"
         android:textSize="34sp"
-        app:layout_constraintTop_toBottomOf="@id/gomul_mot"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="30dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gomul_mot" />
+
+    <!-- Button for 'Login/signup' below 'Næstu mót' -->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

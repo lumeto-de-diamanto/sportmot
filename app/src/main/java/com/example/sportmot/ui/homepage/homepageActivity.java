@@ -1,11 +1,13 @@
 package com.example.sportmot.ui.homepage;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -15,6 +17,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.sportmot.R;
 import com.example.sportmot.databinding.ActivityMainBinding;
+import com.example.sportmot.ui.startpage.startpageActivity;
 import com.example.sportmot.ui.tournament.CurrentTournamentActivity;
 import com.example.sportmot.ui.tournament.OldTournamentsActivity;
 import com.example.sportmot.ui.tournament.UpcomingTournamentActivity;
@@ -27,7 +30,19 @@ public class homepageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        String savedName = sharedPreferences.getString("user_name", "");
+        String savedPassword = sharedPreferences.getString("user_password", "");
+        if (savedName.isEmpty() || savedPassword.isEmpty()) {
+            Intent intent = new Intent(homepageActivity.this, startpageActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_homepage);
+
+        TextView textView = findViewById(R.id.textView);
+        textView.setText("Velkomin/nn/ð,\n" + savedName);
 
         Button button = findViewById(R.id.mot_i_dag);
         button.setOnClickListener(v -> {
@@ -48,10 +63,15 @@ public class homepageActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        Button loginButton = findViewById(R.id.login_page);
-        loginButton.setOnClickListener(v -> {
-            Intent intent = new Intent(homepageActivity.this, LoginActivity.class);
+        Button logoutButton = findViewById(R.id.log_out);
+        logoutButton.setOnClickListener(v -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove("user_name");
+            editor.remove("user_password");
+            editor.apply();
+            Intent intent = new Intent(homepageActivity.this, startpageActivity.class);
             startActivity(intent);
+            finish();
         });
     }
     public void openSubscription(View view) {

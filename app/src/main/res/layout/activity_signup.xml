@@ -48,9 +48,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign up" />
+
     <Button
         android:id="@+id/loginRedirectButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login" />
+        android:text="Switch to Login" />
 </LinearLayout>
