@@ -1,5 +1,6 @@
 package com.example.sportmot.ui.tournament.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import com.example.sportmot.api.ClubApiService;
 import com.example.sportmot.api.RetrofitClient;
@@ -49,8 +51,8 @@ public class RegisterTeamFormFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_register_form, container, false);
-        teamNameInput = view.findViewById(R.id.teamNameInput);
 
+        teamNameInput = view.findViewById(R.id.teamNameInput);
         teamClubInput = view.findViewById(R.id.teamClubInput);
         teamLevelInput = view.findViewById(R.id.teamLevelInput);
         registerTeamButton = view.findViewById(R.id.registerTeamButton);

@@ -16,6 +16,7 @@ import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
 import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
+import com.example.sportmot.ui.tournament.fragment.StatisticsFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,17 +24,17 @@ import java.util.List;
 import java.time.LocalDate;
 import android.widget.LinearLayout;
 import android.view.LayoutInflater;
-
+import android.content.SharedPreferences;
 
 public class CurrentTournamentActivity extends AppCompatActivity {
     private LinearLayout tournamentContainer;
     private TextView tournamentInfo;
     private TournamentApiService apiService;
+    private String role;
     //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_current_tournament);
 
         setContentView(R.layout.activity_tournament_list);
         tournamentContainer = findViewById(R.id.tournament_list);
@@ -47,6 +48,9 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         tournament_title.setText("Mót í dag");
         til_baka.setOnClickListener((v) ->
                 onBackPressed());
+
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        role = prefs.getString("user_role", "");
     }
 
     // Get today's date in yyyy-MM-dd format
@@ -114,7 +118,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         return null;
     }
 
-    // ✅ Filter tournaments that are currently ongoing
+    // Filter tournaments that are currently ongoing
     private List<Tournament> filterTournamentsByTime(List<Tournament> tournaments) {
         List<Tournament> ongoingTournaments = new ArrayList<>();
         Calendar now = Calendar.getInstance();
@@ -154,35 +158,55 @@ public class CurrentTournamentActivity extends AppCompatActivity {
                 (currentHour < endHour || (currentHour == endHour && currentMinute <= endMinute));
     }
 
-    // Display the ongoing tournaments
-    private void displayTournaments(List<Tournament> tournaments) {
-        tournamentContainer.removeAllViews(); // Clear previous items
+    private void showStatisticsFragment() {
+        StatisticsFragment statisticsFragment = new StatisticsFragment();
 
-        for (Tournament tournament : tournaments) {
-            View tournamentView = LayoutInflater.from(this).inflate(R.layout.tournament_item, tournamentContainer, false);
-
-            TextView name = tournamentView.findViewById(R.id.tournament_name);
-            TextView details = tournamentView.findViewById(R.id.tournament_details);
-            Button viewSchedule = tournamentView.findViewById(R.id.view_schedule);
-
-            name.setText(tournament.getTournamentName());
-            details.setText("Date: " + formatDate(tournament.getTournamentDate()));
-
-            viewSchedule.setOnClickListener(v -> showScheduleFragment());
-
-            tournamentContainer.addView(tournamentView);
-        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, statisticsFragment) // Ensure this ID exists in your XML
+                .addToBackStack(null)
+                .commit();
     }
 
-    private void showScheduleFragment() {
+   private void displayTournaments(List<Tournament> tournaments) {
+       tournamentContainer.removeAllViews(); // Clear previous items
+
+       for (Tournament tournament : tournaments) {
+           View tournamentView = LayoutInflater.from(this).inflate(R.layout.tournament_item, tournamentContainer, false);
+
+           TextView name = tournamentView.findViewById(R.id.tournament_name);
+           TextView details = tournamentView.findViewById(R.id.tournament_details);
+           Button viewSchedule = tournamentView.findViewById(R.id.view_schedule);
+           Button registerTeamButton = tournamentView.findViewById(R.id.skra_lid); // Find the button
+           Button viewStatisticsButton = tournamentView.findViewById(R.id.view_statistics_button);
+
+           name.setText(tournament.getTournamentName());
+           details.setText("Date: " + formatDate(tournament.getTournamentDate()));
+
+           viewSchedule.setOnClickListener(v -> showScheduleFragment(tournament.getId()));
+
+           registerTeamButton.setVisibility(View.GONE); // Hides the button
+
+           if (!role.equals("admin")) {
+               viewStatisticsButton.setVisibility(View.GONE);
+               Log.d("UserRoleCheck", "Hiding View Statistics button.");
+           }
+
+           viewStatisticsButton.setOnClickListener(v -> showStatisticsFragment());
+
+           tournamentContainer.addView(tournamentView);
+       }
+   }
+
+    private void showScheduleFragment(int tournamentId) {
+
         View container = findViewById(R.id.ViewGameScheduleFragment);
         if (container != null) {
-            container.setVisibility(View.VISIBLE);  // Make sure the container is visible
+            container.setVisibility(View.VISIBLE);
         } else {
             Log.e("FragmentError", "Fragment container not found!");
         }
 
-        // Load the fragment into the container
+         //Load the fragment into the container
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.ViewGameScheduleFragment, new ViewGameScheduleFragment())
                 .addToBackStack(null)  // Allow going back

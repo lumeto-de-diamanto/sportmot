@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eef">
+
+    <!-- Guideline to center content vertically -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.35"/>
+
+    <TextView
+        android:id="@+id/statistics_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Organizer Dashboard"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/guideline_center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/registered_teams"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registered Teams: Loading..."
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/statistics_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/scheduled_matches"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scheduled Matches: Loading..."
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/registered_teams"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/available_fields"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Available Fields: Loading..."
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/scheduled_matches"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/manage_scheduler"
+        android:layout_width="200dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="20dp"
+        android:text="Manage Schedule"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/available_fields" />
+
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="134dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="20dp"
+        android:text="Til baka"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/manage_scheduler" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
