@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
     android:layout_height="500dp"
@@ -62,6 +63,26 @@
             android:spinnerMode="dropdown"
             android:popupBackground="@android:color/white"
         />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/addTeamIcon"
+                android:layout_width="170dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="20dp"
+                android:text="Bæta við mynd (ekki nauðsynlegt)" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                tools:src="@tools:sample/avatars" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

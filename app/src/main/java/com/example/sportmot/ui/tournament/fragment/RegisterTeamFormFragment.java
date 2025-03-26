@@ -1,21 +1,34 @@
 package com.example.sportmot.ui.tournament.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.FileUtils;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sportmot.api.ClubApiService;
+import com.example.sportmot.api.ImageApiService;
+import com.example.sportmot.api.ImageRetrofitClient;
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.R;
 import com.example.sportmot.api.TeamApiService;
@@ -23,11 +36,18 @@ import com.example.sportmot.data.entities.Club;
 import com.example.sportmot.data.entities.Team;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,10 +58,16 @@ import org.jsoup.select.Elements;
 
 public class RegisterTeamFormFragment extends Fragment {
     private TeamApiService teamApiService;
+    private ImageApiService imageApiService;
     private ClubApiService clubApiService;
     private Button registerTeamButton;
+    private Button addIconButton;
+    private ImageView icon;
     private TextInputEditText teamNameInput, teamLevelInput;
     private Spinner teamClubInput;
+    private Uri image;
+    private File imageFile;
+    private String imagePath;
 
     @Nullable
     @Override
@@ -54,8 +80,13 @@ public class RegisterTeamFormFragment extends Fragment {
         teamClubInput = view.findViewById(R.id.teamClubInput);
         teamLevelInput = view.findViewById(R.id.teamLevelInput);
         registerTeamButton = view.findViewById(R.id.registerTeamButton);
+        addIconButton = view.findViewById(R.id.addTeamIcon);
+        icon = view.findViewById(R.id.imageView);
 
         registerTeamButton.setOnClickListener(v -> registerTeam());
+        addIconButton.setOnClickListener(v -> addIcon());
+
+        image = null;
 
         loadClubs();
 
@@ -156,6 +187,7 @@ public class RegisterTeamFormFragment extends Fragment {
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
                     Log.d("Team Registration", "Team created successfully.");
+                    uploadIcon(teamId);
                 } else {
                     try {
                         Log.e("Team Registration", "Error response: " + response.errorBody().string());
@@ -171,6 +203,79 @@ public class RegisterTeamFormFragment extends Fragment {
                 Log.e("Team Registration", "Error: " + t.getMessage());
             }
         });
+    }
+
+    private void uploadIcon(int teamId) {
+        if (image == null) {return;}
+        // https://medium.com/@ersumansaurav1991/retrofit-2-how-to-upload-files-to-server-df95d7d65d03
+        ImageApiService imageApiService = ImageRetrofitClient.getApiService();
+
+        System.out.println(image);
+        System.out.println(image.getPath());
+        System.out.println(imagePath);
+        System.out.println(imageFile);
+        System.out.println(MediaType.parse(getActivity().getContentResolver().getType(image)));
+
+        RequestBody requestFile =
+                RequestBody.create(
+                        MediaType.parse(getActivity().getContentResolver().getType(image)),
+                        imageFile
+                );
+
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
+
+        RequestBody team = RequestBody.create(
+                        okhttp3.MultipartBody.FORM, String.valueOf(teamId));
+
+        Call<String> call = imageApiService.postImage(team, body);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call,
+                                   Response<String> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.v("Upload", "success");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("Upload error:", t.getMessage());
+            }
+        });
+    }
+
+    private void addIcon() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, 1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1)
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    image = data.getData();
+                    imagePath = getPath(image);
+                    imageFile = new File(imagePath);
+                    InputStream is = getActivity().getContentResolver().openInputStream(image);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    icon.setImageBitmap(bitmap);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = {MediaStore.MediaColumns.DATA};
+        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+        Integer column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        cursor.moveToFirst();
+        imagePath = cursor.getString(column_index);
+
+        return cursor.getString(column_index);
     }
 
 
