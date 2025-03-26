@@ -1,11 +1,10 @@
 package com.example.sportmot.ui.tournament;
 
 import android.content.Intent;
-import android.widget.FrameLayout;
 import android.os.Bundle;
 import com.example.sportmot.R;
 import androidx.appcompat.app.AppCompatActivity;
-import java.time.LocalTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import android.util.Log;
@@ -16,11 +15,12 @@ import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
 import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import java.util.List;
-import java.time.LocalDate;
+
 import android.widget.LinearLayout;
 import android.view.LayoutInflater;
 
@@ -164,11 +164,14 @@ public class CurrentTournamentActivity extends AppCompatActivity {
             TextView name = tournamentView.findViewById(R.id.tournament_name);
             TextView details = tournamentView.findViewById(R.id.tournament_details);
             Button viewSchedule = tournamentView.findViewById(R.id.view_schedule);
+            Button viewMap = tournamentView.findViewById(R.id.view_map);
 
             name.setText(tournament.getTournamentName());
             details.setText("Date: " + formatDate(tournament.getTournamentDate()));
 
             viewSchedule.setOnClickListener(v -> showScheduleFragment());
+
+            viewMap.setOnClickListener(v -> showMapActivity());
 
             tournamentContainer.addView(tournamentView);
         }
@@ -188,6 +191,12 @@ public class CurrentTournamentActivity extends AppCompatActivity {
                 .addToBackStack(null)  // Allow going back
                 .commit();
     }
+
+    private void showMapActivity() {
+        Intent intent = new Intent(CurrentTournamentActivity.this, ViewMapActivity.class);
+        startActivity(intent);
+    }
+
 
     //  Format date from List<Integer> to yyyy-MM-dd
     private String formatDate(List<Integer> date) {

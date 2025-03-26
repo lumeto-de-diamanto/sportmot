@@ -21,6 +21,7 @@ import com.example.sportmot.ui.startpage.startpageActivity;
 import com.example.sportmot.ui.tournament.CurrentTournamentActivity;
 import com.example.sportmot.ui.tournament.OldTournamentsActivity;
 import com.example.sportmot.ui.tournament.UpcomingTournamentActivity;
+import com.example.sportmot.ui.tournament.ViewMapActivity;
 import com.example.sportmot.ui.userpage.LoginActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.example.sportmot.ui.subscription.SubscriptionActivity;
@@ -33,6 +34,7 @@ public class homepageActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
         String savedName = sharedPreferences.getString("user_name", "");
         String savedPassword = sharedPreferences.getString("user_password", "");
+
         if (savedName.isEmpty() || savedPassword.isEmpty()) {
             Intent intent = new Intent(homepageActivity.this, startpageActivity.class);
             startActivity(intent);
@@ -73,10 +75,14 @@ public class homepageActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
     }
     public void openSubscription(View view) {
         Intent intent = new Intent(this, SubscriptionActivity.class);
         startActivity(intent);
     }
+
+
+
 }
 
