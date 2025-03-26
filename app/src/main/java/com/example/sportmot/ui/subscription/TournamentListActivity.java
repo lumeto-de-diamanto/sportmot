@@ -198,14 +198,14 @@ public class TournamentListActivity extends AppCompatActivity {
 
     private void subscribeToTeam(String teamName) {
         SharedPreferences prefs = getSharedPreferences("subscriptions", MODE_PRIVATE);
-        Set<String> subscribedTeams = prefs.getStringSet("teams", new HashSet<>());
+        Set<String> subscribedTeams = new HashSet<>(prefs.getStringSet("subscribed_teams", new HashSet<>()));
 
         // Add new team to the set
         subscribedTeams.add(teamName);
 
         // Save back to SharedPreferences
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putStringSet("teams", subscribedTeams);
+        editor.putStringSet("subscribed_teams", subscribedTeams);
         editor.apply();
 
         System.out.println("Subscribed to team: " + teamName);
