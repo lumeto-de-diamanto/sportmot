@@ -1,10 +1,25 @@
 package com.example.sportmot.ui.tournament;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.widget.FrameLayout;
 import android.os.Bundle;
 import com.example.sportmot.R;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,6 +30,7 @@ import android.widget.TextView;
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
+import com.example.sportmot.ui.homepage.NotificationReceiver;
 import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
 import com.example.sportmot.ui.tournament.fragment.StatisticsFragment;
 import retrofit2.Call;
@@ -22,6 +38,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import java.util.List;
 import java.time.LocalDate;
+import java.util.Locale;
+import java.text.ParseException;
+import android.content.Intent;
+
 import android.widget.LinearLayout;
 import android.view.LayoutInflater;
 import android.content.SharedPreferences;
@@ -31,6 +51,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
     private TextView tournamentInfo;
     private TournamentApiService apiService;
     private String role;
+
     //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +63,28 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         apiService = RetrofitClient.getClient().create(TournamentApiService.class);
 
         fetchCurrentTournaments();  // Fetch all tournaments now
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            String time1 = intent.getStringExtra("GAME_TIME_1");
+            String time2 = intent.getStringExtra("GAME_TIME_2");
+            String time3 = intent.getStringExtra("GAME_TIME_3");
+
+            Log.d("DEBUG_NOTIFICATION", "Received times: " + time1 + ", " + time2 + ", " + time3);
+
+            // Schedule notifications only if time is not null
+            if (time1 != null && !time1.isEmpty()) {
+                scheduleGameNotification(time1);
+            }
+            if (time2 != null && !time2.isEmpty()) {
+                scheduleGameNotification(time2);
+            }
+            if (time3 != null && !time3.isEmpty()) {
+                scheduleGameNotification(time3);
+            }
+        }
+
+        //scheduleGameNotification(String);
 
         Button til_baka = findViewById(R.id.til_baka);
         TextView tournament_title = findViewById(R.id.tournament_title);
@@ -229,4 +272,57 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         return "Unknown Time";
     }
 
+    public void scheduleGameNotification(String time) {
+        if (time == null || time.isEmpty()) {
+            Log.e("DEBUG_NOTIFICATION", "scheduleGameNotification received a null or empty time");
+            return; // Exit method early
+        }
+
+        Log.d("DEBUG_NOTIFICATION", "Received time: " + time);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        try {
+            Date date = sdf.parse(time); // Parse the time from string
+
+            if (date != null) {
+                Calendar gameTime = Calendar.getInstance();
+                gameTime.setTime(date); // Set the parsed time
+
+                // Set today's date
+                Calendar now = Calendar.getInstance();
+                gameTime.set(Calendar.YEAR, now.get(Calendar.YEAR));
+                gameTime.set(Calendar.MONTH, now.get(Calendar.MONTH));
+                gameTime.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
+
+                // Subtract 15 minutes
+                gameTime.add(Calendar.MINUTE, -15);
+
+                // Ensure the notification is scheduled for the future
+                if (gameTime.after(now)) {
+                    scheduleNotification(gameTime);
+                    Log.d("DEBUG_NOTIFICATION", "Notification scheduled for: " + gameTime.getTime());
+                } else {
+                    Log.d("DEBUG_NOTIFICATION", "Game time is in the past. No notification scheduled.");
+                }
+            } else {
+                Log.e("DEBUG_NOTIFICATION", "Parsed date is null");
+            }
+        } catch (ParseException e) {
+            Log.e("DEBUG_NOTIFICATION", "ParseException: " + e.getMessage());
+        }
+    }
+
+    private static int requestCodeCounter = 100; // Start from 100 to avoid conflicts
+    private void scheduleNotification(Calendar calendar) {
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        int requestCode = requestCodeCounter++; // Unique code
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this, requestCode, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
+    }
 }

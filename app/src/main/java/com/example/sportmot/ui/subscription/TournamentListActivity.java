@@ -1,32 +1,46 @@
 package com.example.sportmot.ui.subscription;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sportmot.api.ImageApiService;
+import com.example.sportmot.api.ImageRetrofitClient;
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
 import com.example.sportmot.R;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,6 +49,7 @@ public class TournamentListActivity extends AppCompatActivity {
 
     private LinearLayout tournamentListLayout;
     private TournamentApiService tournamentApiService;
+    private ImageApiService imageApiService;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -51,6 +66,7 @@ public class TournamentListActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> finish());
 
         tournamentApiService = RetrofitClient.getClient().create(TournamentApiService.class);
+        imageApiService = ImageRetrofitClient.getClient().create(ImageApiService.class);
         sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
 
         loadTournaments();
@@ -171,6 +187,51 @@ public class TournamentListActivity extends AppCompatActivity {
         allGames.add("13:00 - Team A vs Team C");
         allGames.add("14:30 - Team B vs Team D");
 
+        TextView tournament_title = findViewById(R.id.tournament_title);
+        tournament_title.setText(selectedTeam);
+
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(VISIBLE);
+
+        ImageView team_icon = findViewById(R.id.teamIcon);
+        String teamID = (Objects.equals(selectedTeam, "Team A")) ? "1" : "2"; // Change this later
+
+        imageApiService.getImage(teamID).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    InputStream stream = response.body().byteStream();
+                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                    System.out.println("picture get!");
+                    team_icon.setVisibility(VISIBLE);
+                    team_icon.setImageBitmap(bitmap);
+                    progressBar.setVisibility(GONE);
+                    // display that bitmap somewhere
+                } else {
+                    progressBar.setVisibility(GONE);
+                    team_icon.setVisibility(VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                progressBar.setVisibility(GONE);
+                team_icon.setVisibility(VISIBLE);
+                Log.e("API_ERROR", "Failed to fetch data", t);
+            }
+        });
+
+        /*
+        try {
+            System.out.println(responseBody);
+            System.out.println(responseBody.execute());
+            Bitmap bitmap = downloadFile(Objects.requireNonNull(responseBody.execute().body()));
+            System.out.println("bitmap get!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+         */
+
         // **Filter only the games for the selected team**
         List<String> teamGames = new ArrayList<>();
         for (String game : allGames) {
@@ -180,6 +241,12 @@ public class TournamentListActivity extends AppCompatActivity {
         }
 
         displayTeamGames(teamGames);
+    }
+
+    private Bitmap downloadFile(ResponseBody body) throws IOException {
+
+        InputStream bis = new BufferedInputStream(body.byteStream(), 1024 * 8);
+        return BitmapFactory.decodeStream(bis);
     }
 
     private void displayTeamGames(List<String> teamGames) {

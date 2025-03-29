@@ -4,6 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +17,7 @@
         android:roundIcon="@mipmap/sportmot_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sportmót"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="31">
         <activity
             android:name=".ui.startpage.startpageActivity"
@@ -56,6 +61,8 @@
             android:name=".ui.subscription.TournamentListActivity"
             android:theme="@style/Theme.Sportmót">
         </activity>
+        <receiver android:name=".ui.homepage.NotificationReceiver"
+            android:exported="false"/>
     </application>
 
 </manifest>

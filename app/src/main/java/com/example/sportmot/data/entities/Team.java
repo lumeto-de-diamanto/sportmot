@@ -78,7 +78,6 @@ public class Team implements Parcelable {
 
     public int getTeamId() {
         return teamId;
-
     }
 
     @Override
