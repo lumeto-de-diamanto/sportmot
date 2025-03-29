@@ -32,6 +32,7 @@ import com.example.sportmot.api.ImageRetrofitClient;
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.R;
 import com.example.sportmot.api.TeamApiService;
+import com.example.sportmot.api.TeamApiService.TeamWithoutClub;
 import com.example.sportmot.data.entities.Club;
 import com.example.sportmot.data.entities.Team;
 import com.google.android.material.textfield.TextInputEditText;
@@ -41,8 +42,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -171,9 +175,6 @@ public class RegisterTeamFormFragment extends Fragment {
             return;
         }
 
-
-
-
         int teamId = (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
 
         Team team = new Team(teamId,teamName, teamClub,teamLevel);
@@ -187,7 +188,10 @@ public class RegisterTeamFormFragment extends Fragment {
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
                     Log.d("Team Registration", "Team created successfully.");
-                    uploadIcon(teamId);
+                    //uploadIcon(teamId);
+                    if (image != null) {
+                        getTeamIdAndUploadIcon(team.getTeamName(), team.getLevel());
+                    }
                 } else {
                     try {
                         Log.e("Team Registration", "Error response: " + response.errorBody().string());
@@ -205,9 +209,49 @@ public class RegisterTeamFormFragment extends Fragment {
         });
     }
 
+    private void getTeamIdAndUploadIcon(String teamName, String teamLevel) {
+        TeamApiService apiService = RetrofitClient.getApiService();
+        Call<List<TeamWithoutClub>> call = apiService.getTeams();
+        call.enqueue(new Callback<List<TeamWithoutClub>>() {
+            @Override
+            public void onResponse(Call<List<TeamWithoutClub>> call, Response<List<TeamWithoutClub>> response) {
+                if (response.isSuccessful()) {
+                    System.out.println(response.body());
+                    List<TeamWithoutClub> teamList = response.body()
+                            .stream()
+                            .filter(t -> {
+                                if (!Objects.equals(t.getTeamName(), teamName)) {
+                                    System.out.println("Name not same: "+t.getTeamName()+" - "+teamName);
+                                    return false;
+                                }
+                                if (!Objects.equals(t.getLevel(), teamLevel)) {
+                                    System.out.println("Level not same: "+t.getLevel()+" - "+teamLevel);
+                                    return false;
+                                }
+                                return true;
+                            })
+                            .collect(Collectors.toList());
+                    System.out.println(teamList);
+                    TeamWithoutClub team = teamList.stream().max(Comparator.comparing(TeamWithoutClub::getTeamId)).get();
+                    int id = team.getTeamId();
+                    uploadIcon(id);
+                } else {
+                    try {
+                        Log.e("Team ID Get", "Error response: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        Log.e("Team ID Get", "Error reading response body", e);
+                    }
+                    Log.e("Team ID Get", "Response code: " + response.code());
+                }
+            }
+            @Override
+            public void onFailure(Call<List<TeamWithoutClub>> call, Throwable t) {
+                Log.e("Team ID Get", "Error: " + t.getMessage());
+            }
+        });
+    }
+
     private void uploadIcon(int teamId) {
-        if (image == null) {return;}
-        // https://medium.com/@ersumansaurav1991/retrofit-2-how-to-upload-files-to-server-df95d7d65d03
         ImageApiService imageApiService = ImageRetrofitClient.getApiService();
 
         System.out.println(image);
@@ -277,7 +321,6 @@ public class RegisterTeamFormFragment extends Fragment {
 
         return cursor.getString(column_index);
     }
-
 
 }
 
