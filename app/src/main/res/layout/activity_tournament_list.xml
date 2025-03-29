@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     android:background="#00BCD4">
 
+    <TextView
+        android:id="@+id/tournament_title"
+        android:layout_width="300dp"
 
     <LinearLayout
         android:id="@+id/tournament_top"
@@ -86,6 +89,12 @@
     </ScrollView>
 
     <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <FrameLayout
         android:id="@+id/formFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -96,4 +105,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

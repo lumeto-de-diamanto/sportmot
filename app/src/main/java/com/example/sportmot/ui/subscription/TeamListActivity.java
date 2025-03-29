@@ -38,7 +38,6 @@ public class TeamListActivity extends AppCompatActivity {
             int teamId = teams.get(position).getTeamId();
             subscriptionManager.subscribeToTeam(String.valueOf(teamId));
 
-            // Finish the activity or close the current screen
             finish();
         });
     }

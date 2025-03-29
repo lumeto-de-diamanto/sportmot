@@ -14,16 +14,22 @@ import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class ViewGameScheduleFragment extends Fragment {
 
     private TextView score1, score2, score3;
+    private Button editScore1, editScore2, editScore3;
 
     @Override
     public  View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_schedule, container, false);
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
+        String role = prefs.getString("user_role", "");
+
         Button closeButton = view.findViewById(R.id.closeButton);
         closeButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
@@ -31,9 +37,15 @@ public class ViewGameScheduleFragment extends Fragment {
         score2 = view.findViewById(R.id.score2);
         score3 = view.findViewById(R.id.score3);
 
-        Button editScore1 = view.findViewById(R.id.editScore1);
-        Button editScore2 = view.findViewById(R.id.editScore2);
-        Button editScore3 = view.findViewById(R.id.editScore3);
+        editScore1 = view.findViewById(R.id.editScore1);
+        editScore2 = view.findViewById(R.id.editScore2);
+        editScore3 = view.findViewById(R.id.editScore3);
+
+        if (!role.equals("admin")){
+            editScore1.setVisibility(View.GONE);
+            editScore2.setVisibility(View.GONE);
+            editScore3.setVisibility(View.GONE);
+        }
 
         editScore1.setOnClickListener(v -> showEditDialog(score1));
         editScore2.setOnClickListener(v -> showEditDialog(score2));
