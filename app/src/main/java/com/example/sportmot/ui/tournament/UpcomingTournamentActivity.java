@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.view.LayoutInflater;
 import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
 import com.example.sportmot.ui.tournament.fragment.StatisticsFragment;
+import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
 
 import android.util.Log;
 import android.widget.TextView;
@@ -157,6 +158,7 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
                 Log.d("UserRoleCheck", "Hiding View Statistics button.");
             } else {
                 Log.d("UserRoleCheck", "Showing View Statistics button.");
+                registerTeamButton.setOnClickListener(v -> showRegisterTeamFragment());
             }
 
             viewStatisticsButton.setOnClickListener(v -> showStatisticsFragment());
@@ -175,6 +177,21 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.ViewGameScheduleFragment, new ViewGameScheduleFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void showRegisterTeamFragment() {
+        View container = findViewById(R.id.formFragment); // Use correct ID
+        if (container != null) {
+            container.setVisibility(View.VISIBLE);
+        } else {
+            Log.e("FragmentError", "Fragment container for RegisterTeamFormFragment not found!");
+            return; // Stop execution if the container is missing
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.formFragment, new RegisterTeamFormFragment()) // Correct ID
                 .addToBackStack(null)
                 .commit();
     }
