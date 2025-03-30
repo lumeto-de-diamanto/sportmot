@@ -175,6 +175,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         for (Tournament tournament : tournaments) {
             Calendar tournamentDate = toCalendarDate(tournament.getTournamentDate());
             Calendar startTime = toCalendarTime(tournament.getStartTime());
+            //Calendar startTime = toCalendarTime(tournament.getStartTimeList()); // Use getStartTimeList() instead of getStartTime()
             Calendar endTime = toCalendarTime(tournament.getEndTime());
 
             if (tournamentDate != null && startTime != null && endTime != null) {
@@ -210,35 +211,35 @@ public class CurrentTournamentActivity extends AppCompatActivity {
                 .commit();
     }
 
-   private void displayTournaments(List<Tournament> tournaments) {
-       tournamentContainer.removeAllViews(); // Clear previous items
+    private void displayTournaments(List<Tournament> tournaments) {
+        tournamentContainer.removeAllViews(); // Clear previous items
 
-       for (Tournament tournament : tournaments) {
-           View tournamentView = LayoutInflater.from(this).inflate(R.layout.tournament_item, tournamentContainer, false);
+        for (Tournament tournament : tournaments) {
+            View tournamentView = LayoutInflater.from(this).inflate(R.layout.tournament_item, tournamentContainer, false);
 
-           TextView name = tournamentView.findViewById(R.id.tournament_name);
-           TextView details = tournamentView.findViewById(R.id.tournament_details);
-           Button viewSchedule = tournamentView.findViewById(R.id.view_schedule);
-           Button registerTeamButton = tournamentView.findViewById(R.id.skra_lid); // Find the button
-           Button viewStatisticsButton = tournamentView.findViewById(R.id.view_statistics_button);
+            TextView name = tournamentView.findViewById(R.id.tournament_name);
+            TextView details = tournamentView.findViewById(R.id.tournament_details);
+            Button viewSchedule = tournamentView.findViewById(R.id.view_schedule);
+            Button registerTeamButton = tournamentView.findViewById(R.id.skra_lid); // Find the button
+            Button viewStatisticsButton = tournamentView.findViewById(R.id.view_statistics_button);
 
-           name.setText(tournament.getTournamentName());
-           details.setText("Date: " + formatDate(tournament.getTournamentDate()));
+            name.setText(tournament.getTournamentName());
+            details.setText("Date: " + formatDate(tournament.getTournamentDate()));
 
-           viewSchedule.setOnClickListener(v -> showScheduleFragment(tournament.getId()));
+            viewSchedule.setOnClickListener(v -> showScheduleFragment(tournament.getId()));
 
-           registerTeamButton.setVisibility(View.GONE); // Hides the button
+            registerTeamButton.setVisibility(View.GONE); // Hides the button
 
-           if (!role.equals("admin")) {
-               viewStatisticsButton.setVisibility(View.GONE);
-               Log.d("UserRoleCheck", "Hiding View Statistics button.");
-           }
+            if (!role.equals("admin")) {
+                viewStatisticsButton.setVisibility(View.GONE);
+                Log.d("UserRoleCheck", "Hiding View Statistics button.");
+            }
 
-           viewStatisticsButton.setOnClickListener(v -> showStatisticsFragment());
+            viewStatisticsButton.setOnClickListener(v -> showStatisticsFragment());
 
-           tournamentContainer.addView(tournamentView);
-       }
-   }
+            tournamentContainer.addView(tournamentView);
+        }
+    }
 
     private void showScheduleFragment(int tournamentId) {
 
@@ -249,7 +250,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
             Log.e("FragmentError", "Fragment container not found!");
         }
 
-         //Load the fragment into the container
+        //Load the fragment into the container
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.ViewGameScheduleFragment, new ViewGameScheduleFragment())
                 .addToBackStack(null)  // Allow going back

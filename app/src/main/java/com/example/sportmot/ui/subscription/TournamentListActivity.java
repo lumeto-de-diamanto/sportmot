@@ -21,11 +21,15 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sportmot.data.entities.TournamentNewWrapper;
+import com.example.sportmot.data.entities.TournamentNew;
 import com.example.sportmot.api.ImageApiService;
 import com.example.sportmot.api.ImageRetrofitClient;
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
+import com.example.sportmot.api.ScheduleApiService;
+import com.example.sportmot.api.ScheduleRetrofitClient;
 import com.example.sportmot.R;
 
 import java.io.BufferedInputStream;
@@ -93,16 +97,68 @@ public class TournamentListActivity extends AppCompatActivity {
                 } else {
                     Log.e("API_ERROR", "Failed to fetch current tournaments");
                 }
-
+                // Fetch upcoming tournaments (Gamli API)
                 fetchUpcomingTournaments(currentDate, allTournaments, tournamentIds);
             }
 
             @Override
             public void onFailure(Call<List<Tournament>> call, Throwable t) {
                 Log.e("API_ERROR", "Error fetching current tournaments: " + t.getMessage());
+
+                // Even if the old API fails, still try to fetch upcoming tournaments
+                fetchUpcomingTournaments(currentDate, allTournaments, tournamentIds);
             }
         });
     }
+
+    private void fetchNewApiTournaments(List<Tournament> allTournaments, Set<String> tournamentIds) {
+        ScheduleApiService scheduleApiService = ScheduleRetrofitClient.getApiService();
+        String API_KEY = "tuIVdCZqQmHUhhc4QdjgOpwYLI2T2AAX7eq7lycr"; // Challonge API key
+
+        scheduleApiService.getTournaments(API_KEY).enqueue(new Callback<List<TournamentNewWrapper>>() {
+            @Override
+            public void onResponse(Call<List<TournamentNewWrapper>> call, Response<List<TournamentNewWrapper>> response) {
+                Log.d("API_RESPONSE", "Response Code: " + response.code());
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("API_RESPONSE", "Received tournaments: " + response.body().size());
+
+                    for (TournamentNewWrapper wrapper : response.body()) {
+                        TournamentNew tournamentNew = wrapper.getTournament();
+                        Log.d("API_RESPONSE", "Tournament: " + tournamentNew.getTournamentName());
+
+                        String tournamentId = String.valueOf(tournamentNew.getId());
+                        if (!tournamentIds.contains(tournamentId)) {
+                            // Convert TournamentNew to Tournament
+                            Tournament tournament = new Tournament(
+                                    tournamentNew.getId(),
+                                    tournamentNew.getTournamentName(),
+                                    tournamentNew.getStartTime(),
+                                    tournamentNew.getEndTime(),
+                                    tournamentNew.getTournamentUrl()
+                            );
+
+                            allTournaments.add(tournament);
+                            tournamentIds.add(tournamentId);
+                        }
+                    }
+                } else {
+                    Log.e("API_ERROR", "Failed to fetch tournaments from new API");
+                }
+
+                // Display ALL tournaments (from both APIs)
+                displayTournaments(allTournaments);
+            }
+
+            @Override
+            public void onFailure(Call<List<TournamentNewWrapper>> call, Throwable t) {
+                Log.e("API_ERROR", "Error fetching tournaments from new API: " + t.getMessage());
+                displayTournaments(allTournaments);
+            }
+        });
+    }
+
+
 
     private void fetchUpcomingTournaments(String currentDate, List<Tournament> allTournaments, Set<String> tournamentIds) {
         tournamentApiService.getUpcomingTournaments(currentDate).enqueue(new Callback<List<Tournament>>() {
@@ -121,12 +177,15 @@ public class TournamentListActivity extends AppCompatActivity {
                     Log.e("API_ERROR", "Failed to fetch upcoming tournaments");
                 }
 
-                displayTournaments(allTournaments);
+                fetchNewApiTournaments(allTournaments, tournamentIds);
+                //displayTournaments(allTournaments);
             }
 
             @Override
             public void onFailure(Call<List<Tournament>> call, Throwable t) {
                 Log.e("API_ERROR", "Error fetching upcoming tournaments: " + t.getMessage());
+
+                fetchNewApiTournaments(allTournaments, tournamentIds);
             }
         });
     }
