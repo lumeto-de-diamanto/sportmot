@@ -21,7 +21,6 @@ import com.example.sportmot.ui.startpage.startpageActivity;
 import com.example.sportmot.ui.tournament.CurrentTournamentActivity;
 import com.example.sportmot.ui.tournament.OldTournamentsActivity;
 import com.example.sportmot.ui.tournament.UpcomingTournamentActivity;
-import com.example.sportmot.ui.tournament.ViewMapActivity;
 import com.example.sportmot.ui.userpage.LoginActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.example.sportmot.ui.subscription.SubscriptionActivity;

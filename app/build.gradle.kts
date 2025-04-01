@@ -54,4 +54,9 @@ dependencies {
     implementation ("org.jsoup:jsoup:1.14.3")
     implementation ("org.osmdroid:osmdroid-android:6.1.14")
 
+
+
+
+
+
 }

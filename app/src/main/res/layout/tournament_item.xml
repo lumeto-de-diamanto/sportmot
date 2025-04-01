@@ -37,4 +37,17 @@
         android:text="Sjá kort"
         android:layout_marginTop="8dp"/>
 
+    <Button
+        android:id="@+id/add_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bæta við heimilisfangi"
+        android:layout_marginTop="8dp"/>
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
 </LinearLayout>

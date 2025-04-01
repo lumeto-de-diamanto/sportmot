@@ -13,6 +13,9 @@ public class Tournament {
     private int numberOfGroups;
     private int teamsPerGroup;
     private int gameLength;
+    private int tournamentID;
+    private double latitude;
+    private double longitude;
 
     // Getters
     public int getId() { return id; }
@@ -24,4 +27,28 @@ public class Tournament {
     public int getNumberOfGroups() { return numberOfGroups; }
     public int getTeamsPerGroup() { return teamsPerGroup; }
     public int getGameLength() { return gameLength; }
+
+    public int getTournamentID() {
+        return tournamentID;
+    }
+
+    public void setTournamentID(int tournamentID) {
+        this.tournamentID = tournamentID;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 }

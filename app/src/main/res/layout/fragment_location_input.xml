@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="16dp">
+
+
+    <TextView
+        android:id="@+id/tvEnterAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settu inn staðsetningu móts:"
+        android:textSize="18sp"
+        android:paddingBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Skrifaðu inn staðsetningu"
+        android:inputType="text" />
+
+
+    <Button
+        android:id="@+id/btnSaveLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vista staðsetningu"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <Button
+        android:id="@+id/btnCloseFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loka" />
+
+</LinearLayout>
