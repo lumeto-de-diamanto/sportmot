@@ -39,7 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="10:00 - Team A vs Team B"
+                android:text="23:25 - Team A vs Team B"
                 android:textSize="18sp" />
 
             <TextView
@@ -70,7 +70,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="11:30 - Team C vs Team D"
+                android:text="23:27 - Team C vs Team D"
                 android:textSize="18sp" />
 
             <TextView
@@ -101,7 +101,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="13:00 - Team E vs Team F"
+                android:text="23:26 - Team E vs Team F"
                 android:textSize="18sp" />
 
             <TextView

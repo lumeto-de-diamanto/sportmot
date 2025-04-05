@@ -23,6 +23,52 @@
         android:textSize="16sp"
         android:paddingTop="4dp"/>
 
+    <TextView
+        android:id="@+id/tournament_start_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Time: 10:00 AM"
+        android:textSize="16sp"
+        android:paddingTop="4dp"/>
+
+    <TextView
+        android:id="@+id/tournament_fields"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fields: 5"
+        android:textSize="16sp"
+        android:paddingTop="4dp"/>
+
+    <TextView
+        android:id="@+id/tournament_groups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Groups: 4"
+        android:textSize="16sp"
+        android:paddingTop="4dp"/>
+
+    <TextView
+        android:id="@+id/tournament_teams_per_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Teams per Group: 8"
+        android:textSize="16sp"
+        android:paddingTop="4dp"/>
+
+    <TextView
+        android:id="@+id/tournament_game_length"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Game Length: 30 mins"
+        android:textSize="16sp"
+        android:paddingTop="4dp"/>
+
+    <Button
+        android:id="@+id/skra_lid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Skrá lið á mót" />
+
     <Button
         android:id="@+id/view_schedule"
         android:layout_width="match_parent"
@@ -31,6 +77,7 @@
         android:layout_marginTop="8dp"/>
 
     <Button
+
         android:id="@+id/view_map"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,6 +95,14 @@
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
+
+        android:id="@+id/view_statistics_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Statistics"
+        android:layout_marginTop="8dp"/>
 
 
 </LinearLayout>

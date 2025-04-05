@@ -2,15 +2,13 @@ package com.example.sportmot.api;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class RetrofitClient {
-
+public class ScheduleRetrofitClient {
     private static Retrofit retrofit;
-    private static final String BASE_URL = "https://sportmot.onrender.com/";
+    private static final String BASE_URL = "https://api.challonge.com/v1/";
 
     public static Retrofit getClient() {
         if (retrofit == null) {
@@ -36,18 +34,7 @@ public class RetrofitClient {
         }
         return retrofit;
     }
-    public static TeamApiService getApiService() {
-        return getClient().create(TeamApiService.class);
+    public static ScheduleApiService getApiService() {
+        return getClient().create(ScheduleApiService.class);
     }
-
-    public static ClubApiService getClubApiService() {
-        return getClient().create(ClubApiService.class);
-    }
-
-    public static TournamentApiService getTournamentApiService(){
-        return getClient().create(TournamentApiService.class);
-    }
-
 }
-
-

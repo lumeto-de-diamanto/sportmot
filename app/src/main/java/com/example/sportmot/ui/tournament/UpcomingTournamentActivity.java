@@ -8,9 +8,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import android.widget.LinearLayout;
+import android.view.LayoutInflater;
+import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
+import com.example.sportmot.ui.tournament.fragment.StatisticsFragment;
+import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
 
 import android.util.Log;
 import android.widget.TextView;
+import android.content.SharedPreferences;
 
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
@@ -26,31 +32,31 @@ import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
 public class UpcomingTournamentActivity extends AppCompatActivity {
     private TextView tournamentInfo;
     private TournamentApiService apiService;
-/*hæhó, ég aftur sama dæmi og áður laga til ;)*/
+    private String role;
+    private LinearLayout tournamentContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_coming_tournament);
+
+        setContentView(R.layout.activity_tournament_list);
+        tournamentInfo = findViewById(R.id.tournament_info);
+        tournamentContainer = findViewById(R.id.tournament_list);
+        apiService = RetrofitClient.getClient().create(TournamentApiService.class);
+
         Button til_baka = findViewById(R.id.til_baka);
-        Button skra_lid = findViewById(R.id.skra_lid);
         TextView tournament_title = findViewById(R.id.tournament_title);
         tournament_title.setText("Næstu mót");
+
         til_baka.setOnClickListener((v) ->
                 onBackPressed()
         );
 
-        skra_lid.setOnClickListener(v ->{
-            RegisterTeamFormFragment fragment = new RegisterTeamFormFragment();
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        role = prefs.getString("user_role", "");
 
-            findViewById(R.id.formFragment).setVisibility(View.VISIBLE);
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.formFragment,fragment).addToBackStack(null).commit();
-        });
-
-        tournamentInfo = findViewById(R.id.tournament_info);
-        apiService = RetrofitClient.getClient().create(TournamentApiService.class);
-
-        fetchUpcomingTournaments(); // Fetch tournaments after today
+        // Fetch tournaments after today
+        fetchUpcomingTournaments();
     }
 
     // Get today's date in yyyy-MM-dd format
@@ -116,21 +122,78 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
         }
         return null;
     }
+    private void showStatisticsFragment() {
+        StatisticsFragment statisticsFragment = new StatisticsFragment();
 
-    // Display upcoming tournaments
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, statisticsFragment) // Ensure this ID exists in your XML
+                .addToBackStack(null)
+                .commit();
+    }
+
     private void displayTournaments(List<Tournament> tournaments) {
-        StringBuilder info = new StringBuilder();
+        tournamentContainer.removeAllViews(); // Clear previous items
+
         for (Tournament tournament : tournaments) {
-            info.append("Tournament: ").append(tournament.getTournamentName())
-                    .append("\nDate: ").append(formatDate(tournament.getTournamentDate()))
-                    .append("\nStart Time: ").append(formatTime(tournament.getStartTime()))
-                    .append("\nFields: ").append(tournament.getFields())
-                    .append("\nGroups: ").append(tournament.getNumberOfGroups())
-                    .append("\nTeams per Group: ").append(tournament.getTeamsPerGroup())
-                    .append("\nGame Length: ").append(tournament.getGameLength())
-                    .append(" mins\n\n");
+            View tournamentView = LayoutInflater.from(this).inflate(R.layout.tournament_item, tournamentContainer, false);
+
+            TextView name = tournamentView.findViewById(R.id.tournament_name);
+            TextView details = tournamentView.findViewById(R.id.tournament_details);
+            Button viewSchedule = tournamentView.findViewById(R.id.view_schedule);
+            Button registerTeamButton = tournamentView.findViewById(R.id.skra_lid); // Find the button
+            Button viewStatisticsButton = tournamentView.findViewById(R.id.view_statistics_button);
+
+            name.setText(tournament.getTournamentName());
+            details.setText("Date: " + formatDate(tournament.getTournamentDate()));
+
+            viewSchedule.setOnClickListener(v -> showScheduleFragment(tournament.getId()));
+
+            if (!role.equals("admin")) {
+                viewStatisticsButton.setVisibility(View.GONE);
+            }
+
+            // virkar ekki á coach af því að það þarf að bæta því role-i við database-inn!!
+            if (!role.equals("coach")) {
+                registerTeamButton.setVisibility(View.GONE);
+                Log.d("UserRoleCheck", "Hiding View Statistics button.");
+            } else {
+                Log.d("UserRoleCheck", "Showing View Statistics button.");
+                registerTeamButton.setOnClickListener(v -> showRegisterTeamFragment());
+            }
+
+            viewStatisticsButton.setOnClickListener(v -> showStatisticsFragment());
+
+            tournamentContainer.addView(tournamentView);
         }
-        tournamentInfo.setText(info.toString());
+    }
+
+    private void showScheduleFragment(int tournamentId) {
+        View container = findViewById(R.id.ViewGameScheduleFragment);
+        if (container != null) {
+            container.setVisibility(View.VISIBLE);
+        } else {
+            Log.e("FragmentError", "Fragment container not found!");
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.ViewGameScheduleFragment, new ViewGameScheduleFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void showRegisterTeamFragment() {
+        View container = findViewById(R.id.formFragment); // Use correct ID
+        if (container != null) {
+            container.setVisibility(View.VISIBLE);
+        } else {
+            Log.e("FragmentError", "Fragment container for RegisterTeamFormFragment not found!");
+            return; // Stop execution if the container is missing
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.formFragment, new RegisterTeamFormFragment()) // Correct ID
+                .addToBackStack(null)
+                .commit();
     }
 
     // Helper: Format date

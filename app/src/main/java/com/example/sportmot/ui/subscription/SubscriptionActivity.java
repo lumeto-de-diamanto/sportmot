@@ -3,6 +3,7 @@ package com.example.sportmot.ui.subscription;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import java.util.HashMap;
 import android.content.SharedPreferences;
 import android.view.ViewGroup;
 import android.view.Gravity;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
+import android.graphics.Color;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,6 +45,8 @@ public class SubscriptionActivity extends AppCompatActivity {
         til_baka.setOnClickListener((v) ->
                 onBackPressed());
 
+        loadSubscribedTeams();
+
         //Hardcoded games
         allGames.add(new Game("team1", "Team B", "March 10", "10:00 AM"));
         allGames.add(new Game("team1", "Team C", "March 12", "12:00 PM"));
@@ -52,35 +56,103 @@ public class SubscriptionActivity extends AppCompatActivity {
 
     private void loadSubscribedTeams() {
         SharedPreferences prefs = getSharedPreferences("subscriptions", MODE_PRIVATE);
-        Set<String> subscribedTeams = prefs.getStringSet("teams", new HashSet<>());
+        Set<String> subscribedTeams = prefs.getStringSet("subscribed_teams", new HashSet<>());
 
-        gamesLayout.removeAllViews(); // Clear UI before adding new elements
+        gamesLayout.removeAllViews();
 
         if (subscribedTeams.isEmpty()) {
             subscribeButton.setVisibility(View.VISIBLE);
         } else {
-            subscribeButton.setVisibility(View.GONE);
+            subscribeButton.setVisibility(View.VISIBLE);
             displaySubscribedTeams(new ArrayList<>(subscribedTeams));
         }
     }
 
     private void displaySubscribedTeams(List<String> teams) {
+        gamesLayout.removeAllViews();
         for (String team : teams) {
-            TextView teamView = new TextView(this);
-            teamView.setText(team);
-            teamView.setTextSize(18);
-            teamView.setTextColor(getResources().getColor(android.R.color.black));
-            teamView.setGravity(Gravity.CENTER);
-            teamView.setPadding(16, 16, 16, 16);
+            LinearLayout teamCard = new LinearLayout(this);
+            teamCard.setOrientation(LinearLayout.VERTICAL);
+            teamCard.setPadding(30, 30, 30, 30);
+            teamCard.setBackground(getResources().getDrawable(R.drawable.card_background));
+            teamCard.setElevation(8);
 
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
-            layoutParams.setMargins(10, 10, 10, 10);
-            teamView.setLayoutParams(layoutParams);
 
-            gamesLayout.addView(teamView);
+            cardParams.setMargins(20, 20, 20, 20);
+            teamCard.setLayoutParams(cardParams);
+
+            TextView teamView = new TextView(this);
+            teamView.setText(team);
+            teamView.setTextSize(24);
+            teamView.setTypeface(null, android.graphics.Typeface.BOLD);
+            teamView.setTextColor(Color.WHITE);
+            teamView.setGravity(Gravity.CENTER);
+            teamView.setPadding(10, 10, 10, 10);
+
+            teamCard.addView(teamView);
+
+            String teamId = getTeamIdFromName(team);
+            if (!teamId.isEmpty()) {
+                displayTeamGames(teamId, teamCard);
+            } else {
+                System.out.println("❌ No teamId found for: " + team); // Debugging
+            }
+
+            Button unsubscribeButton = new Button(this);
+            unsubscribeButton.setText("Unsubscribe");
+            unsubscribeButton.setBackgroundColor(Color.DKGRAY);
+            unsubscribeButton.setTextColor(Color.WHITE);
+            unsubscribeButton.setPadding(10, 5, 10, 5);
+            unsubscribeButton.setOnClickListener(v -> {
+                unsubscribeTeam(team);
+            });
+
+            teamCard.addView(unsubscribeButton);
+
+            gamesLayout.addView(teamCard);
+
+        }
+    }
+
+    private void unsubscribeTeam(String team) {
+        SharedPreferences prefs = getSharedPreferences("subscriptions", MODE_PRIVATE);
+        Set<String> subscribedTeams = new HashSet<>(prefs.getStringSet("subscribed_teams", new HashSet<>()));
+
+        if (subscribedTeams.contains(team)) {
+            subscribedTeams.remove(team);
+            prefs.edit().putStringSet("subscribed_teams", subscribedTeams).apply();
+        }
+
+        updateUI();
+    }
+
+    private String getTeamIdFromName(String teamName) {
+        // Hardcoded mapping (Replace with actual API data later)
+        HashMap<String, String> teamMap = new HashMap<>();
+        teamMap.put("Team A", "team1");
+        teamMap.put("Team B", "team1");
+        teamMap.put("Team C", "team1");
+        teamMap.put("Team D", "team2");
+
+        return teamMap.getOrDefault(teamName, "");
+    }
+
+    private void displayTeamGames(String selectedTeam, LinearLayout teamCard) {
+        for (Game game : allGames) {
+            if (game.getTeamId().equals(selectedTeam)) {
+                TextView gameTextView = new TextView(this);
+                gameTextView.setText("VS " + game.getOpponent() + " - " + game.getDate() + " at " + game.getTime());
+                gameTextView.setTextSize(18);
+                gameTextView.setTextColor(Color.WHITE);
+                gameTextView.setGravity(Gravity.CENTER);
+                gameTextView.setPadding(10, 5, 10, 5);
+
+                teamCard.addView(gameTextView);
+            }
         }
     }
 
@@ -92,20 +164,19 @@ public class SubscriptionActivity extends AppCompatActivity {
             subscribeButton.setVisibility(View.VISIBLE);
         } else {
             subscribeButton.setVisibility(View.GONE);
-            for (String teamId : subscribedTeams) {
-                for (Game game : allGames) {
-                    if (game.getTeamId().equals(teamId)) {
-                        TextView gameView = new TextView(this);
-                        gameView.setText("VS " + game.getOpponent() + " - " + game.getDate() + " at " + game.getTime());
-                        gamesLayout.addView(gameView);
-                    }
-                }
-            }
+            displaySubscribedTeams(new ArrayList<>(subscribedTeams));
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadSubscribedTeams();
     }
 
     public void onSubscribeClicked(View view) {
         Intent intent = new Intent(this, TournamentListActivity.class);
         startActivity(intent);
     }
+
 }

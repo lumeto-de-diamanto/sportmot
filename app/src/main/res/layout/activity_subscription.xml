@@ -6,7 +6,6 @@
     android:padding="16dp"
     android:background="#00BCD4">
 
-    <!-- Title -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
@@ -17,11 +16,11 @@
         android:layout_gravity="center_horizontal"
         android:paddingBottom="10dp"/>
 
-    <!-- List of subscribed teams & matches -->
     <ScrollView
         android:layout_width="380dp"
         android:layout_height="466dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="#eef">
 
         <LinearLayout
             android:id="@+id/gamesLayout"
@@ -31,7 +30,6 @@
 
     </ScrollView>
 
-    <!-- Subscribe Button (Shown when no teams are subscribed) -->
     <Button
         android:id="@+id/subscribeButton"
         android:layout_width="wrap_content"
@@ -50,6 +48,5 @@
         android:text="Til baka"
         android:textSize="22sp"
         android:layout_gravity="center_horizontal" />
-
 
 </LinearLayout>

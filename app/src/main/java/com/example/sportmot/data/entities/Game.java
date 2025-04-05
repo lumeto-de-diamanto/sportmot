@@ -5,12 +5,14 @@ public class Game {
     private String opponent;
     private String date;
     private String time;
+    private String tournamentName;
 
     public Game(String teamId, String opponent, String date, String time) {
         this.teamId = teamId;
         this.opponent = opponent;
         this.date = date;
         this.time = time;
+        this.tournamentName = tournamentName;
     }
 
     public String getTeamId() {
@@ -28,4 +30,6 @@ public class Game {
     public String getTime() {
         return time;
     }
+
+    public String getTournamentName() { return tournamentName; }
 }

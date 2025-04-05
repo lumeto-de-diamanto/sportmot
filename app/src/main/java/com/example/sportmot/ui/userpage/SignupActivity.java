@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
@@ -59,7 +60,8 @@ public class SignupActivity extends AppCompatActivity {
 
         int selectedRoleId = roleRadioGroup.getCheckedRadioButtonId();
         RadioButton selectedRoleButton = findViewById(selectedRoleId);
-        String role = selectedRoleButton.getText().toString();
+        String role = selectedRoleButton.getText().toString().toLowerCase();
+
 
         if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
@@ -75,6 +77,12 @@ public class SignupActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(SignupActivity.this, "Sign-up successful!", Toast.LENGTH_SHORT).show();
+
+                    SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("user_role", role);
+                    editor.apply();
+
                     navigateToLogin();
                     Log.d("SignUp", "User created successfully: " + response.body());
                 } else {
