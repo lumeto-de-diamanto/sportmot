@@ -47,6 +47,7 @@ public class RetrofitClient {
     public static TournamentApiService getTournamentApiService(){
         return getClient().create(TournamentApiService.class);
     }
+
 }
 
 

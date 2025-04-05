@@ -13,6 +13,9 @@ public class Tournament {
     private int numberOfGroups;
     private int teamsPerGroup;
     private int gameLength;
+    private int tournamentID;
+    private double latitude;
+    private double longitude;
 
     // Default constructor (existing one)
     public Tournament() {
@@ -43,11 +46,36 @@ public class Tournament {
     public int getTeamsPerGroup() { return teamsPerGroup; }
     public int getGameLength() { return gameLength; }
 
+
+    public int getTournamentID() {
+        return tournamentID;
+    }
+
+    public void setTournamentID(int tournamentID) {
+        this.tournamentID = tournamentID;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+
     // Helper method to convert time string to List<Integer>
     private List<Integer> convertTimeStringToList(String timeString) {
         // For example, you might convert "2025-03-30T14:30:00" to a list of [14, 30]
         // Implement the logic here to extract relevant time values as integers
         return null;  // Replace with actual conversion logic
+
     }
 }
 

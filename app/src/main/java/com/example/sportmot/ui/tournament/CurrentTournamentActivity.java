@@ -4,10 +4,14 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.FrameLayout;
 import android.os.Bundle;
 import com.example.sportmot.R;
 import androidx.appcompat.app.AppCompatActivity;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +25,7 @@ import android.content.Intent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import android.util.Log;
@@ -30,17 +35,26 @@ import android.widget.TextView;
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
+
+import com.example.sportmot.ui.tournament.fragment.AddLocationFragment;
+import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
+import com.example.sportmot.ui.tournament.ViewMapActivity;
+
+
 import com.example.sportmot.ui.homepage.NotificationReceiver;
 import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
 import com.example.sportmot.ui.tournament.fragment.StatisticsFragment;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import java.util.List;
+
 import java.time.LocalDate;
 import java.util.Locale;
 import java.text.ParseException;
 import android.content.Intent;
+
 
 import android.widget.LinearLayout;
 import android.view.LayoutInflater;
@@ -220,8 +234,13 @@ public class CurrentTournamentActivity extends AppCompatActivity {
             TextView name = tournamentView.findViewById(R.id.tournament_name);
             TextView details = tournamentView.findViewById(R.id.tournament_details);
             Button viewSchedule = tournamentView.findViewById(R.id.view_schedule);
+
+            Button viewMap = tournamentView.findViewById(R.id.view_map);
+            Button addLocation = tournamentView.findViewById(R.id.add_location);
+
             Button registerTeamButton = tournamentView.findViewById(R.id.skra_lid); // Find the button
             Button viewStatisticsButton = tournamentView.findViewById(R.id.view_statistics_button);
+
 
             name.setText(tournament.getTournamentName());
             details.setText("Date: " + formatDate(tournament.getTournamentDate()));
@@ -237,11 +256,33 @@ public class CurrentTournamentActivity extends AppCompatActivity {
 
             viewStatisticsButton.setOnClickListener(v -> showStatisticsFragment());
 
+            viewMap.setOnClickListener(v -> showMapActivity(tournament.getId()));
+
+            addLocation.setOnClickListener(v -> openAddLocationFragment(tournament.getId()));
+
             tournamentContainer.addView(tournamentView);
         }
     }
 
+
+    private void openAddLocationFragment(int tournamentID) {
+
+        Log.d("TournamentLog", "Opening Add Location Fragment for Tournament ID: " + tournamentID);  // Log when location is added
+
+        AddLocationFragment fragment = AddLocationFragment.newInstance(tournamentID);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragmentContainer, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+    }
+
+    private void showScheduleFragment() {
+
     private void showScheduleFragment(int tournamentId) {
+
 
         View container = findViewById(R.id.ViewGameScheduleFragment);
         if (container != null) {
@@ -256,6 +297,18 @@ public class CurrentTournamentActivity extends AppCompatActivity {
                 .addToBackStack(null)  // Allow going back
                 .commit();
     }
+
+    private void showMapActivity(int tournamentId) {
+        // Create an Intent to start ViewMapActivity
+        Intent intent = new Intent(this, ViewMapActivity.class);
+
+        // Pass the tournament ID to ViewMapActivity
+        intent.putExtra("TOURNAMENT_ID", tournamentId);
+
+        // Start the activity
+        startActivity(intent);
+    }
+
 
     //  Format date from List<Integer> to yyyy-MM-dd
     private String formatDate(List<Integer> date) {

@@ -9,6 +9,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 import java.util.List;
@@ -34,6 +35,10 @@ public interface TournamentApiService {
     @GET("/rest/tournaments")
     Call<List<Tournament>> getOldTournaments(@Query("date") String date);
 
+    @GET("/tournament/{tournamentID}")
+    Call<Tournament> getTournamentById(@Path("tournamentID") int tournamentID);
+
     @GET("/tournament/stats")
     Call<TournamentStats> getTournamentStats();
+
 }

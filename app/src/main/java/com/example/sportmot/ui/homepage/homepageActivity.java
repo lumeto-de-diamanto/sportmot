@@ -42,6 +42,7 @@ public class homepageActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
         String savedName = sharedPreferences.getString("user_name", "");
         String savedPassword = sharedPreferences.getString("user_password", "");
+
         if (savedName.isEmpty() || savedPassword.isEmpty()) {
             Intent intent = new Intent(homepageActivity.this, startpageActivity.class);
             startActivity(intent);
@@ -116,5 +117,8 @@ public class homepageActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SubscriptionActivity.class);
         startActivity(intent);
     }
+
+
+
 }
 
