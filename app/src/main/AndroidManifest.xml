@@ -65,6 +65,12 @@
             android:theme="@style/Theme.Sportmót">
 
         </activity>
+
     </application>
+
+    <queries>
+        <package android:name="com.android.location.provider"/>
+    </queries>
+
 
 </manifest>

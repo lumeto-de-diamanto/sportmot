@@ -53,10 +53,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-scalars:2.9.0")
     implementation ("org.jsoup:jsoup:1.14.3")
     implementation ("org.osmdroid:osmdroid-android:6.1.14")
-
-
-
-
+    implementation("com.github.MKergall:osmbonuspack:6.9.0")
 
 
 }

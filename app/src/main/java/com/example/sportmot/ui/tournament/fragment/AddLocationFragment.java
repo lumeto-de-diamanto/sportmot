@@ -24,18 +24,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Fragment allows the admin to enter an address for a tournament. It takes the tournament ID from
+ * the parent fragment. It uses geocoding services to convert the address to long and lat coordinates.
+ * These coordinates are saved to the database under the unique tournament ID
+ * */
+
 public class AddLocationFragment extends Fragment {
     private EditText editAddress;
     private Button buttonSaveLocation;
 
     private int tournamentID;
 
-    // ✅ Use a no-argument constructor
-    public AddLocationFragment() {
-        // Required empty public constructor
-    }
-
-
+    public AddLocationFragment() {}
 
 
     public static AddLocationFragment newInstance(int tournamentID) {

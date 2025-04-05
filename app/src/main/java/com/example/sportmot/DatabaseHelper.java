@@ -10,6 +10,11 @@ import android.util.Log;
 import org.osmdroid.util.GeoPoint;
 
 
+/**
+ * This class manages the tournament location. The SQLite database stores the location that
+ * is made out of latitude and longitude. Here we save, update and retrieve the location of the
+ * tournament by using the tournament ID.
+ * */
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "SportmotDatabase.db";
     private static final int DATABASE_VERSION = 1;
@@ -62,8 +67,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(tournamentId)});
 
         if (cursor.moveToFirst()) {
-            double latitude = cursor.getDouble(0);  // First column = latitude
-            double longitude = cursor.getDouble(1); // Second column = longitude
+            double latitude = cursor.getDouble(0);
+            double longitude = cursor.getDouble(1);
             location = new double[]{latitude, longitude};
         }
 
