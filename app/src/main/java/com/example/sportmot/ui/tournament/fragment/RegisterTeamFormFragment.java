@@ -109,7 +109,6 @@ public class RegisterTeamFormFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Club> clubs = response.body();
 
-
                     ArrayAdapter<Club> adapter = new ArrayAdapter<Club>(getContext(),
                             android.R.layout.simple_spinner_item, clubs) {
                         @Override
@@ -190,10 +189,15 @@ public class RegisterTeamFormFragment extends Fragment {
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
                     Log.d("Team Registration", "Team created successfully.");
+                    Toast.makeText(getContext(), "Skráning tókst!", Toast.LENGTH_SHORT).show();
+
                     //uploadIcon(teamId);
                     if (image != null) {
                         getTeamIdAndUploadIcon(team.getTeamName(), team.getLevel());
                     }
+
+                    // Either way, go back to the previous screen
+                    requireActivity().getSupportFragmentManager().popBackStack();
                 } else {
                     try {
                         Log.e("Team Registration", "Error response: " + response.errorBody().string());
@@ -280,6 +284,8 @@ public class RegisterTeamFormFragment extends Fragment {
                                    Response<String> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.v("Upload", "success");
+                    requireActivity().getSupportFragmentManager().popBackStack();
+
                 }
             }
 
