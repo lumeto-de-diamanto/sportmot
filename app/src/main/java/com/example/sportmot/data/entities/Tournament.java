@@ -69,6 +69,7 @@ public class Tournament {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
 
     // Helper method to convert time string to List<Integer>
     private List<Integer> convertTimeStringToList(String timeString) {

@@ -236,6 +236,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
             Button viewSchedule = tournamentView.findViewById(R.id.view_schedule);
 
             Button viewMap = tournamentView.findViewById(R.id.view_map);
+
             Button addLocation = tournamentView.findViewById(R.id.add_location);
 
             Button registerTeamButton = tournamentView.findViewById(R.id.skra_lid); // Find the button
@@ -258,6 +259,10 @@ public class CurrentTournamentActivity extends AppCompatActivity {
 
             viewMap.setOnClickListener(v -> showMapActivity(tournament.getId()));
 
+            if (!role.equals("admin")) {
+                addLocation.setVisibility(View.GONE);
+                Log.d("UserRoleCheck", "Hiding View Statistics button.");
+            }
             addLocation.setOnClickListener(v -> openAddLocationFragment(tournament.getId()));
 
             tournamentContainer.addView(tournamentView);
@@ -279,7 +284,6 @@ public class CurrentTournamentActivity extends AppCompatActivity {
 
     }
 
-    private void showScheduleFragment() {
 
     private void showScheduleFragment(int tournamentId) {
 

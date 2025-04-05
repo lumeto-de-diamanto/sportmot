@@ -52,7 +52,7 @@ public class homepageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_homepage);
 
         TextView textView = findViewById(R.id.textView);
-        textView.setText("Velkomin/nn/ð,\n" + savedName);
+        textView.setText("Halló,\n" + savedName);
 
         Button button = findViewById(R.id.mot_i_dag);
         button.setOnClickListener(v -> {
