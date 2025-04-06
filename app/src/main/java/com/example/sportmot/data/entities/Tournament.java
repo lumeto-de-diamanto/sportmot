@@ -17,6 +17,8 @@ public class Tournament {
     private double latitude;
     private double longitude;
 
+    private String cId;
+
     // Default constructor (existing one)
     public Tournament() {
         // Initialize default values if necessary
@@ -33,6 +35,8 @@ public class Tournament {
 
         // If tournamentUrl is not necessary for your logic, you can ignore it
         // Otherwise, store it if needed
+
+        this.cId = cId;
     }
 
     // Getters
@@ -78,5 +82,8 @@ public class Tournament {
         return null;  // Replace with actual conversion logic
 
     }
+
+    public String getcId(){return cId;}
+
 }
 

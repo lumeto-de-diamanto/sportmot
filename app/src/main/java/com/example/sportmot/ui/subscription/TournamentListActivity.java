@@ -18,14 +18,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sportmot.data.entities.ChallongeTeam;
+import com.example.sportmot.data.entities.ChallongeTeamWrapper;
 import com.example.sportmot.data.entities.TournamentNewWrapper;
 import com.example.sportmot.data.entities.TournamentNew;
 import com.example.sportmot.api.ImageApiService;
 import com.example.sportmot.api.ImageRetrofitClient;
-import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
 import com.example.sportmot.api.ScheduleApiService;
@@ -35,12 +37,9 @@ import com.example.sportmot.R;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -54,6 +53,7 @@ public class TournamentListActivity extends AppCompatActivity {
     private LinearLayout tournamentListLayout;
     private TournamentApiService tournamentApiService;
     private ImageApiService imageApiService;
+    private ScheduleApiService scheduleApiService;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -69,51 +69,19 @@ public class TournamentListActivity extends AppCompatActivity {
 
         backButton.setOnClickListener(v -> finish());
 
-        tournamentApiService = RetrofitClient.getClient().create(TournamentApiService.class);
+        //tournamentApiService = RetrofitClient.getClient().create(TournamentApiService.class);
         imageApiService = ImageRetrofitClient.getClient().create(ImageApiService.class);
+        scheduleApiService = ScheduleRetrofitClient.getApiService();
         sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
 
-        loadTournaments();
+        fetchChallongeTournaments(new ArrayList<>(), new HashSet<>());
+
     }
 
-    private void loadTournaments() {
-        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-        List<Tournament> allTournaments = new ArrayList<>();
-        Set<String> tournamentIds = new HashSet<>();
-
-        tournamentApiService.getCurrentTournaments(currentDate).enqueue(new Callback<List<Tournament>>() {
-            @Override
-            public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    for (Tournament tournament : response.body()) {
-                        String tournamentId = String.valueOf(tournament.getId());
-
-                        if (!tournamentIds.contains(tournamentId)) {
-                            allTournaments.add(tournament);
-                            tournamentIds.add(tournamentId);
-                        }
-                    }
-                } else {
-                    Log.e("API_ERROR", "Failed to fetch current tournaments");
-                }
-                // Fetch upcoming tournaments (Gamli API)
-                fetchUpcomingTournaments(currentDate, allTournaments, tournamentIds);
-            }
-
-            @Override
-            public void onFailure(Call<List<Tournament>> call, Throwable t) {
-                Log.e("API_ERROR", "Error fetching current tournaments: " + t.getMessage());
-
-                // Even if the old API fails, still try to fetch upcoming tournaments
-                fetchUpcomingTournaments(currentDate, allTournaments, tournamentIds);
-            }
-        });
-    }
-
-    private void fetchNewApiTournaments(List<Tournament> allTournaments, Set<String> tournamentIds) {
+    private void fetchChallongeTournaments(List<TournamentNew> allTournaments, Set<String> tournamentIds) {
         ScheduleApiService scheduleApiService = ScheduleRetrofitClient.getApiService();
-        String API_KEY = "tuIVdCZqQmHUhhc4QdjgOpwYLI2T2AAX7eq7lycr"; // Challonge API key
+        String API_KEY = "tuIVdCZqQmHUhhc4QdjgOpwYLI2T2AAX7eq7lycr"; //
 
         scheduleApiService.getTournaments(API_KEY).enqueue(new Callback<List<TournamentNewWrapper>>() {
             @Override
@@ -128,17 +96,11 @@ public class TournamentListActivity extends AppCompatActivity {
                         Log.d("API_RESPONSE", "Tournament: " + tournamentNew.getTournamentName());
 
                         String tournamentId = String.valueOf(tournamentNew.getId());
-                        if (!tournamentIds.contains(tournamentId)) {
-                            // Convert TournamentNew to Tournament
-                            Tournament tournament = new Tournament(
-                                    tournamentNew.getId(),
-                                    tournamentNew.getTournamentName(),
-                                    tournamentNew.getStartTime(),
-                                    tournamentNew.getEndTime(),
-                                    tournamentNew.getTournamentUrl()
-                            );
 
-                            allTournaments.add(tournament);
+                        // Ensure we don't add duplicate tournaments
+                        if (!tournamentIds.contains(tournamentId)) {
+                            // Directly use TournamentNew without converting to custom Tournament class
+                            allTournaments.add(tournamentNew);
                             tournamentIds.add(tournamentId);
                         }
                     }
@@ -146,7 +108,7 @@ public class TournamentListActivity extends AppCompatActivity {
                     Log.e("API_ERROR", "Failed to fetch tournaments from new API");
                 }
 
-                // Display ALL tournaments (from both APIs)
+                // Display ALL tournaments (from both APIs or just the Challonge ones)
                 displayTournaments(allTournaments);
             }
 
@@ -160,40 +122,10 @@ public class TournamentListActivity extends AppCompatActivity {
 
 
 
-    private void fetchUpcomingTournaments(String currentDate, List<Tournament> allTournaments, Set<String> tournamentIds) {
-        tournamentApiService.getUpcomingTournaments(currentDate).enqueue(new Callback<List<Tournament>>() {
-            @Override
-            public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    for (Tournament tournament : response.body()) {
-                        String tournamentId = String.valueOf(tournament.getId());
-
-                        if (!tournamentIds.contains(tournamentId)) {
-                            allTournaments.add(tournament);
-                            tournamentIds.add(tournamentId);
-                        }
-                    }
-                } else {
-                    Log.e("API_ERROR", "Failed to fetch upcoming tournaments");
-                }
-
-                fetchNewApiTournaments(allTournaments, tournamentIds);
-                //displayTournaments(allTournaments);
-            }
-
-            @Override
-            public void onFailure(Call<List<Tournament>> call, Throwable t) {
-                Log.e("API_ERROR", "Error fetching upcoming tournaments: " + t.getMessage());
-
-                fetchNewApiTournaments(allTournaments, tournamentIds);
-            }
-        });
-    }
-
-    private void displayTournaments(List<Tournament> tournaments) {
+    private void displayTournaments(List<TournamentNew> tournaments) {
         tournamentListLayout.removeAllViews();
 
-        for (Tournament tournament : tournaments) {
+        for (TournamentNew tournament : tournaments) {
             LinearLayout tournamentRow = new LinearLayout(this);
             tournamentRow.setOrientation(LinearLayout.HORIZONTAL);
             tournamentRow.setPadding(16, 16, 16, 16);
@@ -217,26 +149,48 @@ public class TournamentListActivity extends AppCompatActivity {
         }
     }
 
-    private void showTeamsDialog(Tournament tournament) {
-        // **Hardcoded teams (since API is not working)**
-        List<String> teams = new ArrayList<>();
-        teams.add("Team A");
-        teams.add("Team B");
-        teams.add("Team C");
-        teams.add("Team D");
+    private void showTeamsDialog(TournamentNew tournament) {
+        int tournamentId = tournament.getId();  // Assuming tournament ID is a String
+        String API_KEY = "tuIVdCZqQmHUhhc4QdjgOpwYLI2T2AAX7eq7lycr";  // Your API key
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a team in " + tournament.getTournamentName());
+        String tournamentIdStr = String.valueOf(tournamentId);
 
-        builder.setItems(teams.toArray(new String[0]), (dialog, which) -> {
-            String selectedTeam = teams.get(which);
-            subscribeToTeam(selectedTeam);
-            showTeamGames(selectedTeam);
+        if (tournamentId <= 0) {
+            Log.e("API_ERROR", "Invalid tournament ID: " + tournamentId);
+            return;
+        }
+
+        // Fetch teams using the tournament ID
+        scheduleApiService.getTeams(tournamentIdStr, API_KEY).enqueue(new Callback<List<ChallongeTeamWrapper>>() {
+            @Override
+            public void onResponse(Call<List<ChallongeTeamWrapper>> call, Response<List<ChallongeTeamWrapper>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<String> teams = new ArrayList<>();
+                    for (ChallongeTeamWrapper wrapper : response.body()) {
+                        ChallongeTeam team = wrapper.getTeam();
+                        if (team != null && team.getName() != null) {
+                            teams.add(team.getName());
+                        } else {
+                            Log.w("API_WARNING", "Found a team with no name or null data");
+                        }
+                    }
+
+                    // Show team selection dialog with the list of team names
+                    showTeamSelectionDialog(tournament.getTournamentName(), teams);
+                } else {
+                    Log.e("API_ERROR", "Failed to load teams for tournament " + tournamentId);
+                    Toast.makeText(TournamentListActivity.this, "Failed to load teams", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ChallongeTeamWrapper>> call, Throwable t) {
+                Log.e("API_ERROR", "Error fetching teams: " + t.getMessage());
+                Toast.makeText(TournamentListActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-        builder.show();
     }
+
 
     private void showTeamGames(String selectedTeam) {
         // **Hardcoded games (since API is not working)**
@@ -335,5 +289,19 @@ public class TournamentListActivity extends AppCompatActivity {
         editor.apply();
 
         System.out.println("Subscribed to team: " + teamName);
+    }
+
+    private void showTeamSelectionDialog(String tournamentName, List<String> teams) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a team in " + tournamentName);
+
+        builder.setItems(teams.toArray(new String[0]), (dialog, which) -> {
+            String selectedTeam = teams.get(which);
+            subscribeToTeam(selectedTeam);
+            showTeamGames(selectedTeam);
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        builder.show();
     }
 }
