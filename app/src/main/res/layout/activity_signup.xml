@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="User" />
+            android:text="Notandi" />
 
         <RadioButton
             android:id="@+id/adminRadioButton"
@@ -48,18 +48,18 @@
             android:id="@+id/coachRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Coach" />
+            android:text="Þjálfari" />
     </RadioGroup>
 
     <Button
         android:id="@+id/signUpButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign up" />
+        android:text="Nýskráning" />
 
     <Button
         android:id="@+id/loginRedirectButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Switch to Login" />
+        android:text="Aftur á innskráning" />
 </LinearLayout>
