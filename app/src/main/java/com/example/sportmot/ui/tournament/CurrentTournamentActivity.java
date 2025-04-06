@@ -234,14 +234,11 @@ public class CurrentTournamentActivity extends AppCompatActivity {
             TextView name = tournamentView.findViewById(R.id.tournament_name);
             TextView details = tournamentView.findViewById(R.id.tournament_details);
             Button viewSchedule = tournamentView.findViewById(R.id.view_schedule);
-
             Button viewMap = tournamentView.findViewById(R.id.view_map);
-
             Button addLocation = tournamentView.findViewById(R.id.add_location);
-
             Button registerTeamButton = tournamentView.findViewById(R.id.skra_lid); // Find the button
             Button viewStatisticsButton = tournamentView.findViewById(R.id.view_statistics_button);
-
+            Button viewResultsButton = tournamentView.findViewById(R.id.view_results);
 
             name.setText(tournament.getTournamentName());
             details.setText("Date: " + formatDate(tournament.getTournamentDate()));
@@ -249,6 +246,8 @@ public class CurrentTournamentActivity extends AppCompatActivity {
             viewSchedule.setOnClickListener(v -> showScheduleFragment(tournament.getId()));
 
             registerTeamButton.setVisibility(View.GONE); // Hides the button
+
+            viewResultsButton.setVisibility(View.GONE);
 
             if (!role.equals("admin")) {
                 viewStatisticsButton.setVisibility(View.GONE);

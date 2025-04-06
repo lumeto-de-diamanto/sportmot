@@ -142,11 +142,13 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
             Button viewSchedule = tournamentView.findViewById(R.id.view_schedule);
             Button registerTeamButton = tournamentView.findViewById(R.id.skra_lid); // Find the button
             Button viewStatisticsButton = tournamentView.findViewById(R.id.view_statistics_button);
-
+            Button viewResultsButton = tournamentView.findViewById(R.id.view_results);
             name.setText(tournament.getTournamentName());
             details.setText("Date: " + formatDate(tournament.getTournamentDate()));
 
             viewSchedule.setOnClickListener(v -> showScheduleFragment(tournament.getId()));
+
+            viewResultsButton.setVisibility(View.GONE);
 
             if (!role.equals("admin")) {
                 viewStatisticsButton.setVisibility(View.GONE);

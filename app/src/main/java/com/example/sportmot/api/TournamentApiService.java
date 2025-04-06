@@ -2,7 +2,7 @@ package com.example.sportmot.api;
 import com.example.sportmot.data.entities.Tournament;
 import com.example.sportmot.data.entities.User;
 import com.example.sportmot.data.entities.TournamentStats;
-
+import com.example.sportmot.data.entities.TournamentResults;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -40,5 +40,8 @@ public interface TournamentApiService {
 
     @GET("/tournament/stats")
     Call<TournamentStats> getTournamentStats();
+
+    @GET("tournaments/{id}/results")
+    Call<TournamentResults> getTournamentResults(@Path("id") int tournamentId, @Query("apiKey") String apiKey);
 
 }
