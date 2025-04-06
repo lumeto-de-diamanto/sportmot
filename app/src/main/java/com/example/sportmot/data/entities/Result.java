@@ -1,8 +1,13 @@
 package com.example.sportmot.data.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Result {
+    @SerializedName("player1_id")
     private int player1Id;
+    @SerializedName("player2_id")
     private int player2Id;
+    @SerializedName("scores_csv")
     private String scoresCsv;
 
     // Getters and setters for the new fields
