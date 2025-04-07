@@ -54,7 +54,7 @@
                 android:id="@+id/editScore1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit" />
+                android:text="Breyta" />
         </LinearLayout>
 
         <!-- Game 2 -->
@@ -85,7 +85,7 @@
                 android:id="@+id/editScore2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit" />
+                android:text="Breyta" />
         </LinearLayout>
 
         <!-- Game 3 -->
@@ -116,7 +116,7 @@
                 android:id="@+id/editScore3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit" />
+                android:text="Breyta" />
         </LinearLayout>
 
         <!-- Close Button -->

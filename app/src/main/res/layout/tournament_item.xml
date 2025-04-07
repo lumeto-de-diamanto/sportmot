@@ -73,7 +73,7 @@
         android:id="@+id/view_schedule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View Schedule"
+        android:text="Skoða dagskrá"
         android:layout_marginTop="8dp"/>
 
     <Button
@@ -95,7 +95,14 @@
         android:id="@+id/view_statistics_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View Statistics"
+        android:text="Skoða tölfræði"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/view_results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Skoða úrslit"
         android:layout_marginTop="8dp"/>
 
     <FrameLayout

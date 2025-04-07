@@ -1,6 +1,8 @@
 package com.example.sportmot.data.entities;
 
 import java.util.List;
+import java.util.ArrayList;
+
 
 public class Tournament {
     private int id;
@@ -24,19 +26,36 @@ public class Tournament {
         // Initialize default values if necessary
     }
 
-    // Constructor with the parameters for TournamentNew
     public Tournament(int id, String tournamentName, String startTime, String endTime, String tournamentUrl) {
         this.id = id;
         this.tournamentName = tournamentName;
+        this.startTime = convertTimeStringToList(startTime);  // Convert the string to List<Integer>
+        this.endTime = convertTimeStringToList(endTime);      // Convert the string to List<Integer>
+    }
 
-        // You might want to convert the string times to List<Integer> here if needed
-        this.startTime = convertTimeStringToList(startTime);
-        this.endTime = convertTimeStringToList(endTime);
+    public void setId(int id) {
+        this.id = id;
+    }
 
-        // If tournamentUrl is not necessary for your logic, you can ignore it
-        // Otherwise, store it if needed
+    public void setTournamentName(String tournamentName) {
+        this.tournamentName = tournamentName;
+    }
+
+
+    public void setStartTime(List<Integer> startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(List<Integer> endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setTournamentDate(List<Integer> tournamentDate) {
+        this.tournamentDate = tournamentDate;
+
 
         this.cId = cId;
+
     }
 
     // Getters
@@ -49,6 +68,7 @@ public class Tournament {
     public int getNumberOfGroups() { return numberOfGroups; }
     public int getTeamsPerGroup() { return teamsPerGroup; }
     public int getGameLength() { return gameLength; }
+    public String getcId(){return cId;}
 
 
     public int getTournamentID() {
@@ -76,14 +96,51 @@ public class Tournament {
     }
 
     // Helper method to convert time string to List<Integer>
-    private List<Integer> convertTimeStringToList(String timeString) {
+    //private List<Integer> convertTimeStringToList(String timeString) {
         // For example, you might convert "2025-03-30T14:30:00" to a list of [14, 30]
         // Implement the logic here to extract relevant time values as integers
-        return null;  // Replace with actual conversion logic
+      //  return null;  // Replace with actual conversion logic
+
+    //}
+    //public static List<Integer> convertTimeStringToList(String timeString) {
+        // Example: "2025-03-30T14:30:00" -> [2025, 3, 30, 14, 30]
+      //  String[] dateTimeParts = timeString.split("T");
+        //String[] dateParts = dateTimeParts[0].split("-");
+        //String[] timeParts = dateTimeParts[1].split(":");
+
+        // Convert each part to Integer and return as List
+        //return List.of(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]),
+          //      Integer.parseInt(timeParts[0]), Integer.parseInt(timeParts[1]));
+    //}
+        public static List<Integer> convertTimeStringToList(String timeString) {
+            if (timeString == null || timeString.isEmpty()) {
+                return new ArrayList<>();  // Return an empty list if the input is null or empty
+            }
+
+            // Example: "2025-03-30T14:30:00" -> [2025, 3, 30, 14, 30]
+            String[] dateTimeParts = timeString.split("T");
+            if (dateTimeParts.length != 2) {
+                return new ArrayList<>();  // Return an empty list if the time string format is unexpected
+            }
+
+            String[] dateParts = dateTimeParts[0].split("-");
+            String[] timeParts = dateTimeParts[1].split(":");
+
+            // Convert each part to Integer and return as List
+            return List.of(
+                    Integer.parseInt(dateParts[0]),
+                    Integer.parseInt(dateParts[1]),
+                    Integer.parseInt(dateParts[2]),
+                    Integer.parseInt(timeParts[0]),
+                    Integer.parseInt(timeParts[1])
+            );
+        }
+
 
     }
 
-    public String getcId(){return cId;}
+
 
 }
+
 
