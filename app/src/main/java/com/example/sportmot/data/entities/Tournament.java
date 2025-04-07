@@ -19,6 +19,8 @@ public class Tournament {
     private double latitude;
     private double longitude;
 
+    private String cId;
+
     // Default constructor (existing one)
     public Tournament() {
         // Initialize default values if necessary
@@ -39,6 +41,7 @@ public class Tournament {
         this.tournamentName = tournamentName;
     }
 
+
     public void setStartTime(List<Integer> startTime) {
         this.startTime = startTime;
     }
@@ -49,6 +52,10 @@ public class Tournament {
 
     public void setTournamentDate(List<Integer> tournamentDate) {
         this.tournamentDate = tournamentDate;
+
+
+        this.cId = cId;
+
     }
 
     // Getters
@@ -61,6 +68,7 @@ public class Tournament {
     public int getNumberOfGroups() { return numberOfGroups; }
     public int getTeamsPerGroup() { return teamsPerGroup; }
     public int getGameLength() { return gameLength; }
+    public String getcId(){return cId;}
 
 
     public int getTournamentID() {
@@ -127,6 +135,11 @@ public class Tournament {
                     Integer.parseInt(timeParts[1])
             );
         }
+
+
+    }
+
+
 
 }
 
