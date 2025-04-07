@@ -60,7 +60,7 @@ public class SignupActivity extends AppCompatActivity {
 
         int selectedRoleId = roleRadioGroup.getCheckedRadioButtonId();
         RadioButton selectedRoleButton = findViewById(selectedRoleId);
-        String role = selectedRoleButton.getText().toString().toLowerCase();
+        String role = selectedRoleButton.getTag().toString().toLowerCase();
 
 
         if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {

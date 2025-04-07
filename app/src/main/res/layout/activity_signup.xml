@@ -36,18 +36,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
+            android:tag="user"
             android:text="Notandi" />
 
         <RadioButton
             android:id="@+id/adminRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="admin"
             android:text="Admin" />
 
         <RadioButton
             android:id="@+id/coachRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="coach"
             android:text="Þjálfari" />
     </RadioGroup>
 

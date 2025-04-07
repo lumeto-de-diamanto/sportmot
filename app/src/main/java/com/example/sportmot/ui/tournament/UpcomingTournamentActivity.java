@@ -154,12 +154,13 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
                 viewStatisticsButton.setVisibility(View.GONE);
             }
 
-            // virkar ekki á coach af því að það þarf að bæta því role-i við database-inn!!
-            if (!role.equals("coach")) {
+            Log.d("UserRoleCheck", "Role value: " + role);
+
+            if (role.equals("user")) {
                 registerTeamButton.setVisibility(View.GONE);
-                Log.d("UserRoleCheck", "Hiding View Statistics button.");
+                Log.d("UserRoleCheck", "Hiding View team button.");
             } else {
-                Log.d("UserRoleCheck", "Showing View Statistics button.");
+                Log.d("UserRoleCheck", "Showing View team button.");
                 registerTeamButton.setOnClickListener(v -> showRegisterTeamFragment());
             }
 
