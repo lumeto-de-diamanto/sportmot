@@ -191,7 +191,7 @@ public class ViewResultsFragment extends Fragment {
                     //List<ChallongeTeamWrapper> participants = response.body();
                     for (ChallongeTeamWrapper wrapper : response.body()) {
                         //for (ChallongeTeamWrapper wrapper : participants) {
-                        ChallongeTeam team = wrapper.getParticipant();
+                        ChallongeTeam team = wrapper.getTeam();
                         playerNames.put(team.getId(), team.getName());
                         Log.d("ViewResults", "Player ID: " + team.getId() + ", Name: " + team.getName());
                     }
