@@ -60,11 +60,11 @@ public class ViewGameScheduleFragment extends Fragment {
         String time3 = extractTime(game3.getText().toString()); // Extract "16:00"
 
         // Pass times to TournamentActivity
-        Intent intent = new Intent(getActivity(), CurrentTournamentActivity.class);
-        intent.putExtra("GAME_TIME_1", time1);
-        intent.putExtra("GAME_TIME_2", time2);
-        intent.putExtra("GAME_TIME_3", time3);
-        startActivity(intent);
+        //Intent intent = new Intent(getActivity(), CurrentTournamentActivity.class);
+        //intent.putExtra("GAME_TIME_1", time1);
+        //intent.putExtra("GAME_TIME_2", time2);
+        //intent.putExtra("GAME_TIME_3", time3);
+        //startActivity(intent);
 
 
         return view;
