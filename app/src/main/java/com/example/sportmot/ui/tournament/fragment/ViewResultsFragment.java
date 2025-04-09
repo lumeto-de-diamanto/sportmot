@@ -1,7 +1,10 @@
 package com.example.sportmot.ui.tournament.fragment;
 
+import static android.view.View.GONE;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -42,6 +45,7 @@ public class ViewResultsFragment extends Fragment {
     private Map<Integer, String> playerNames = new HashMap<>();
     private List<Result> pendingResults = new ArrayList<>();
 
+
     public static ViewResultsFragment newInstance(int tournamentId) {
         ViewResultsFragment fragment = new ViewResultsFragment();
         Bundle args = new Bundle();
@@ -53,15 +57,11 @@ public class ViewResultsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("ScheduleFragment", "onCreateView called");
         View view = inflater.inflate(R.layout.fragment_view_results, container, false);
 
         Button closeButton = view.findViewById(R.id.closeButton);
-
-        resultsText = view.findViewById(R.id.results_text);
-
-        loadingText = view.findViewById(R.id.loading_text);
-     
+        loadingText = view.findViewById(R.id.loading_text); // Make sure this TextView exists in your layout
+        resultsList = view.findViewById(R.id.results_list);
 
         closeButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
@@ -69,10 +69,12 @@ public class ViewResultsFragment extends Fragment {
             tournamentId = getArguments().getInt(ARG_TOURNAMENT_ID);
             fetchParticipants(tournamentId);
         }
+
         return view;
     }
 
     private void fetchResultsFromApi() {
+        // Use ScheduleRetrofitClient instead of ResultsRetrofitClient
         ResultsApiService resultsApiService = ScheduleRetrofitClient
                 .getClient()
                 .create(ResultsApiService.class);
@@ -98,15 +100,12 @@ public class ViewResultsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<MatchWrapper>> call, Throwable t) {
-
-                resultsText.setText("Failed to load results.");
                 loadingText.setText("Failed to load results.");
-                
             }
         });
     }
 
-    // Fetch team names based on the tournament ID
+    // Fetch participants (team names) based on the tournament ID
     private void fetchParticipants(int tournamentId) {
         ResultsApiService resultsApiService = ScheduleRetrofitClient
                 .getClient()
@@ -147,10 +146,8 @@ public class ViewResultsFragment extends Fragment {
     private void displayResultsWithNames(List<Result> results) {
         resultsList.removeAllViews();
         for (Result result : results) {
-
             System.out.println(result);
             View resultView = LayoutInflater.from(getActivity()).inflate(R.layout.result_item, resultsList, false);
-
             String teamAName = playerNames.get(result.getPlayer1Id());
             String teamBName = playerNames.get(result.getPlayer2Id());
 
@@ -159,6 +156,13 @@ public class ViewResultsFragment extends Fragment {
 
             Button editResultsButton = resultView.findViewById(R.id.button);
             // Hide button if not admin
+
+            SharedPreferences prefs = requireActivity().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
+            String role = prefs.getString("user_role", "");
+
+            if (!role.equals("admin")) {
+                editResultsButton.setVisibility(GONE);
+            }
 
             StringBuilder matchStringBuilder = new StringBuilder();
             matchStringBuilder.append("Match: ");
@@ -206,7 +210,6 @@ public class ViewResultsFragment extends Fragment {
                 int Score1 = Integer.parseInt(scores[0]);
                 int Score2 = Integer.parseInt(scores[1]);
                 System.out.println(score);
-                //scoreTextView.setText(newScore);
                 ResultsApiService resultsApiService = ScheduleRetrofitClient
                         .getClient()
                         .create(ResultsApiService.class);

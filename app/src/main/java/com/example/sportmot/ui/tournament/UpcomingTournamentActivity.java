@@ -5,16 +5,11 @@ import android.view.View;
 import android.widget.Button;
 import com.example.sportmot.R;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import android.widget.LinearLayout;
 import android.view.LayoutInflater;
-
-import com.example.sportmot.data.entities.User;
-import com.example.sportmot.ui.tournament.fragment.AddLocationFragment;
 import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
 import com.example.sportmot.ui.tournament.fragment.StatisticsFragment;
 import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
@@ -31,6 +26,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import java.util.List;
 
+import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
 public class UpcomingTournamentActivity extends AppCompatActivity {
     private TextView tournamentInfo;
     private TournamentApiService apiService;
@@ -53,12 +49,8 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
                 onBackPressed()
         );
 
-
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         role = prefs.getString("user_role", "");
-
-
-
 
         // Fetch tournaments after today
         fetchUpcomingTournaments();
@@ -167,7 +159,7 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
                 Log.d("UserRoleCheck", "Hiding View team button.");
             } else {
                 Log.d("UserRoleCheck", "Showing View team button.");
-                registerTeamButton.setOnClickListener(v -> showRegisterTeamFragment(tournament.getId()));
+                registerTeamButton.setOnClickListener(v -> showRegisterTeamFragment());
             }
 
             viewStatisticsButton.setOnClickListener(v -> showStatisticsFragment());
