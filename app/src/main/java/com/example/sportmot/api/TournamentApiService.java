@@ -26,6 +26,9 @@ public interface TournamentApiService {
             @Field("userID") String userID,
             @Field("password") String password);
 
+    @GET("/rest/users")
+    Call<User> getUser();
+
     @GET("/rest/tournaments")
     Call<List<Tournament>> getCurrentTournaments(@Query("date") String date);
 
@@ -43,5 +46,9 @@ public interface TournamentApiService {
 
     @GET("tournaments/{id}/results")
     Call<TournamentResults> getTournamentResults(@Path("id") int tournamentId, @Query("apiKey") String apiKey);
+
+    @GET("rest/tournaments")
+    Call<List<Tournament>> getAllTournaments();
+
 
 }

@@ -1,4 +1,5 @@
 package com.example.sportmot.ui.subscription;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +36,9 @@ public class TeamListActivity extends AppCompatActivity {
         listView.setOnItemClickListener((adapterView, view, position, id) -> {
             int teamId = teams.get(position).getTeamId();
             subscriptionManager.subscribeToTeam(String.valueOf(teamId));
+
+            Intent intent = new Intent(TeamListActivity.this, SubscriptionActivity.class);
+            startActivity(intent);
 
             finish();
         });

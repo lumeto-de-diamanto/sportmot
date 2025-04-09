@@ -75,7 +75,7 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/tournament_info"
+                android:id="@+id/loading_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"

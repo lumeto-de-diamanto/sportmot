@@ -25,7 +25,6 @@ import com.example.sportmot.data.entities.Tournament;
 import com.example.sportmot.ui.tournament.fragment.AddLocationFragment;
 import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
 import com.example.sportmot.ui.tournament.fragment.ViewResultsFragment;
-
 import com.example.sportmot.ui.homepage.NotificationReceiver;
 import com.example.sportmot.ui.tournament.fragment.StatisticsFragment;
 
@@ -52,7 +51,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_tournament_list);
         tournamentContainer = findViewById(R.id.tournament_list);
-        tournamentInfo = findViewById(R.id.tournament_info);
+        tournamentInfo = findViewById(R.id.loading_text);
         apiService = RetrofitClient.getClient().create(TournamentApiService.class);
 
         fetchCurrentTournaments();  // Fetch all tournaments now

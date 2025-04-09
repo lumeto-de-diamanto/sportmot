@@ -17,10 +17,10 @@ import com.example.sportmot.api.ScheduleApiService;
 import com.example.sportmot.api.ScheduleRetrofitClient;
 import com.example.sportmot.data.entities.TournamentNew;
 import com.example.sportmot.data.entities.TournamentNewWrapper;
-import java.time.LocalTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import android.os.Bundle;
+
 import android.util.Log;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,7 +38,7 @@ public class OldTournamentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tournament_list);
 
-        tournamentInfo = findViewById(R.id.tournament_info);
+        tournamentInfo = findViewById(R.id.loading_text);
         tournamentContainer = findViewById(R.id.tournament_list);
         apiService = RetrofitClient.getClient().create(TournamentApiService.class);
         newApiService = ScheduleRetrofitClient.getApiService();

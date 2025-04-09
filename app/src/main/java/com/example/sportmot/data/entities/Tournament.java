@@ -2,6 +2,8 @@ package com.example.sportmot.data.entities;
 
 import java.util.List;
 import java.util.ArrayList;
+import com.google.gson.annotations.SerializedName;
+
 
 
 public class Tournament {
@@ -18,8 +20,11 @@ public class Tournament {
     private int tournamentID;
     private double latitude;
     private double longitude;
+  
+    @SerializedName("cid")
+    private int cId;
 
-    private String cId;
+    // Default constructor
     public Tournament() {
     }
     public Tournament(int id, String tournamentName, String startTime, String endTime, String tournamentUrl) {
@@ -57,7 +62,9 @@ public class Tournament {
     public int getNumberOfGroups() { return numberOfGroups; }
     public int getTeamsPerGroup() { return teamsPerGroup; }
     public int getGameLength() { return gameLength; }
-    public String getcId(){return cId;}
+
+    public int getcId(){return cId;}
+
     public int getTournamentID() {
         return tournamentID;
     }
