@@ -1,7 +1,10 @@
 package com.example.sportmot.ui.tournament.fragment;
 
+import static android.view.View.GONE;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -234,6 +237,13 @@ public class ViewResultsFragment extends Fragment {
 
             Button editResultsButton = resultView.findViewById(R.id.button);
             // Hide button if not admin
+
+            SharedPreferences prefs = requireActivity().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
+            String role = prefs.getString("user_role", "");
+
+            if (!role.equals("admin")) {
+                editResultsButton.setVisibility(GONE);
+            }
 
             StringBuilder matchStringBuilder = new StringBuilder();
             matchStringBuilder.append("Match: ");
