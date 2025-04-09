@@ -55,7 +55,6 @@ public class TournamentListActivity extends AppCompatActivity {
     private ImageApiService imageApiService;
     private ScheduleApiService scheduleApiService;
     private SharedPreferences sharedPreferences;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +68,6 @@ public class TournamentListActivity extends AppCompatActivity {
 
         backButton.setOnClickListener(v -> finish());
 
-        //tournamentApiService = RetrofitClient.getClient().create(TournamentApiService.class);
         imageApiService = ImageRetrofitClient.getClient().create(ImageApiService.class);
         scheduleApiService = ScheduleRetrofitClient.getApiService();
         sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
@@ -77,12 +75,9 @@ public class TournamentListActivity extends AppCompatActivity {
         fetchChallongeTournaments(new ArrayList<>(), new HashSet<>());
 
     }
-
-
     private void fetchChallongeTournaments(List<TournamentNew> allTournaments, Set<String> tournamentIds) {
         ScheduleApiService scheduleApiService = ScheduleRetrofitClient.getApiService();
-        String API_KEY = "tuIVdCZqQmHUhhc4QdjgOpwYLI2T2AAX7eq7lycr"; //
-
+        String API_KEY = "tuIVdCZqQmHUhhc4QdjgOpwYLI2T2AAX7eq7lycr";
         scheduleApiService.getTournaments(API_KEY).enqueue(new Callback<List<TournamentNewWrapper>>() {
             @Override
             public void onResponse(Call<List<TournamentNewWrapper>> call, Response<List<TournamentNewWrapper>> response) {
@@ -99,7 +94,6 @@ public class TournamentListActivity extends AppCompatActivity {
 
                         // Ensure we don't add duplicate tournaments
                         if (!tournamentIds.contains(tournamentId)) {
-                            // Directly use TournamentNew without converting to custom Tournament class
                             allTournaments.add(tournamentNew);
                             tournamentIds.add(tournamentId);
                         }
@@ -108,7 +102,7 @@ public class TournamentListActivity extends AppCompatActivity {
                     Log.e("API_ERROR", "Failed to fetch tournaments from new API");
                 }
 
-                // Display ALL tournaments (from both APIs or just the Challonge ones)
+                // Display ALL tournaments
                 displayTournaments(allTournaments);
             }
 
@@ -119,8 +113,6 @@ public class TournamentListActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void displayTournaments(List<TournamentNew> tournaments) {
         tournamentListLayout.removeAllViews();
@@ -191,9 +183,8 @@ public class TournamentListActivity extends AppCompatActivity {
         });
     }
 
-
     private void showTeamGames(String selectedTeam) {
-        // **Hardcoded games (since API is not working)**
+        //Hardcoded games for now
         List<String> allGames = new ArrayList<>();
         allGames.add("10:00 - Team A vs Team B");
         allGames.add("11:30 - Team C vs Team D");
@@ -207,7 +198,7 @@ public class TournamentListActivity extends AppCompatActivity {
         progressBar.setVisibility(VISIBLE);
 
         ImageView team_icon = findViewById(R.id.teamIcon);
-        String teamID = (Objects.equals(selectedTeam, "Team A")) ? "1" : "2"; // Change this later
+        String teamID = (Objects.equals(selectedTeam, "Team A")) ? "1" : "2";
 
         imageApiService.getImage(teamID).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -219,7 +210,6 @@ public class TournamentListActivity extends AppCompatActivity {
                     team_icon.setVisibility(VISIBLE);
                     team_icon.setImageBitmap(bitmap);
                     progressBar.setVisibility(GONE);
-                    // display that bitmap somewhere
                 } else {
                     progressBar.setVisibility(GONE);
                     team_icon.setVisibility(VISIBLE);
@@ -234,18 +224,7 @@ public class TournamentListActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        try {
-            System.out.println(responseBody);
-            System.out.println(responseBody.execute());
-            Bitmap bitmap = downloadFile(Objects.requireNonNull(responseBody.execute().body()));
-            System.out.println("bitmap get!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-         */
-
-        // **Filter only the games for the selected team**
+        // Filter only the games for the selected team
         List<String> teamGames = new ArrayList<>();
         for (String game : allGames) {
             if (game.contains(selectedTeam)) {
@@ -280,7 +259,7 @@ public class TournamentListActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("subscriptions", MODE_PRIVATE);
         Set<String> subscribedTeams = new HashSet<>(prefs.getStringSet("subscribed_teams", new HashSet<>()));
 
-        // Add new team to the set
+        // Add new team
         subscribedTeams.add(teamName);
 
         // Save back to SharedPreferences

@@ -42,7 +42,6 @@ public class startpageActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
-
     @Override
     public void onResume(){
         super.onResume();

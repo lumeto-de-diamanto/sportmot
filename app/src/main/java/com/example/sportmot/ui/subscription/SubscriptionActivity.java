@@ -24,9 +24,7 @@ public class SubscriptionActivity extends AppCompatActivity {
     private LinearLayout gamesLayout;
     private Button subscribeButton;
 
-    //Hardcoded leikir - API vonandi seinna!!!
     private List<Game> allGames = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +51,6 @@ public class SubscriptionActivity extends AppCompatActivity {
         allGames.add(new Game("team2", "Team D", "March 11", "11:00 AM"));
         updateUI();
     }
-
     private void loadSubscribedTeams() {
         SharedPreferences prefs = getSharedPreferences("subscriptions", MODE_PRIVATE);
         Set<String> subscribedTeams = prefs.getStringSet("subscribed_teams", new HashSet<>());
@@ -67,7 +64,6 @@ public class SubscriptionActivity extends AppCompatActivity {
             displaySubscribedTeams(new ArrayList<>(subscribedTeams));
         }
     }
-
     private void displaySubscribedTeams(List<String> teams) {
         gamesLayout.removeAllViews();
         for (String team : teams) {
@@ -99,7 +95,7 @@ public class SubscriptionActivity extends AppCompatActivity {
             if (!teamId.isEmpty()) {
                 displayTeamGames(teamId, teamCard);
             } else {
-                System.out.println("❌ No teamId found for: " + team); // Debugging
+                System.out.println("No teamId found for: " + team); // Debugging
             }
 
             Button unsubscribeButton = new Button(this);
@@ -114,7 +110,6 @@ public class SubscriptionActivity extends AppCompatActivity {
             teamCard.addView(unsubscribeButton);
 
             gamesLayout.addView(teamCard);
-
         }
     }
 
@@ -178,5 +173,4 @@ public class SubscriptionActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TournamentListActivity.class);
         startActivity(intent);
     }
-
 }

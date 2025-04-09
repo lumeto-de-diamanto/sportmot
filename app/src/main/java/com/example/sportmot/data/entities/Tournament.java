@@ -20,41 +20,33 @@ public class Tournament {
     private int tournamentID;
     private double latitude;
     private double longitude;
+  
     @SerializedName("cid")
     private int cId;
 
-    // Default constructor (existing one)
+    // Default constructor
     public Tournament() {
-        // Initialize default values if necessary
     }
-
     public Tournament(int id, String tournamentName, String startTime, String endTime, String tournamentUrl) {
         this.id = id;
         this.tournamentName = tournamentName;
         this.startTime = convertTimeStringToList(startTime);  // Convert the string to List<Integer>
         this.endTime = convertTimeStringToList(endTime);      // Convert the string to List<Integer>
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
     public void setTournamentName(String tournamentName) {
         this.tournamentName = tournamentName;
     }
-
-
     public void setStartTime(List<Integer> startTime) {
         this.startTime = startTime;
     }
-
     public void setEndTime(List<Integer> endTime) {
         this.endTime = endTime;
     }
-
     public void setTournamentDate(List<Integer> tournamentDate) {
         this.tournamentDate = tournamentDate;
-
 
         this.cId = cId;
 
@@ -70,8 +62,8 @@ public class Tournament {
     public int getNumberOfGroups() { return numberOfGroups; }
     public int getTeamsPerGroup() { return teamsPerGroup; }
     public int getGameLength() { return gameLength; }
-    public int getcId(){return cId;}
 
+    public int getcId(){return cId;}
 
     public int getTournamentID() {
         return tournamentID;
@@ -97,32 +89,14 @@ public class Tournament {
         this.longitude = longitude;
     }
 
-    // Helper method to convert time string to List<Integer>
-    //private List<Integer> convertTimeStringToList(String timeString) {
-        // For example, you might convert "2025-03-30T14:30:00" to a list of [14, 30]
-        // Implement the logic here to extract relevant time values as integers
-      //  return null;  // Replace with actual conversion logic
-
-    //}
-    //public static List<Integer> convertTimeStringToList(String timeString) {
-        // Example: "2025-03-30T14:30:00" -> [2025, 3, 30, 14, 30]
-      //  String[] dateTimeParts = timeString.split("T");
-        //String[] dateParts = dateTimeParts[0].split("-");
-        //String[] timeParts = dateTimeParts[1].split(":");
-
-        // Convert each part to Integer and return as List
-        //return List.of(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]),
-          //      Integer.parseInt(timeParts[0]), Integer.parseInt(timeParts[1]));
-    //}
         public static List<Integer> convertTimeStringToList(String timeString) {
             if (timeString == null || timeString.isEmpty()) {
-                return new ArrayList<>();  // Return an empty list if the input is null or empty
+                return new ArrayList<>();
             }
 
-            // Example: "2025-03-30T14:30:00" -> [2025, 3, 30, 14, 30]
             String[] dateTimeParts = timeString.split("T");
             if (dateTimeParts.length != 2) {
-                return new ArrayList<>();  // Return an empty list if the time string format is unexpected
+                return new ArrayList<>();
             }
 
             String[] dateParts = dateTimeParts[0].split("-");

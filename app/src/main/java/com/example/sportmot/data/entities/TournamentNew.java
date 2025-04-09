@@ -4,26 +4,24 @@ import com.google.gson.annotations.SerializedName;
 public class TournamentNew {
     private int id;
 
-    @SerializedName("name") // API key for tournament name
+    @SerializedName("name")
     private String tournamentName;
 
-    @SerializedName("start_at") // API key for tournament start time
+    @SerializedName("start_at")
     private String startTime;
 
-    @SerializedName("completed_at") // API key for tournament end time
+    @SerializedName("completed_at")
     private String endTime;
 
-    @SerializedName("full_challonge_url") // API key for tournament link
+    @SerializedName("full_challonge_url")
     private String tournamentUrl;
-    @SerializedName("date") // API key for tournament date
+    @SerializedName("date")
     private String tournamentDate;
-
     public int getId() { return id; }
     public String getTournamentName() { return tournamentName; }
     public String getStartTime() { return startTime; }
     public String getEndTime() { return endTime; }
     public String getTournamentUrl() { return tournamentUrl; }
-
     public String getTournamentDate() {return tournamentDate; }
 }
 

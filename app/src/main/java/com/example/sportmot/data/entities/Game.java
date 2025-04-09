@@ -6,7 +6,6 @@ public class Game {
     private String date;
     private String time;
     private String tournamentName;
-
     public Game(String teamId, String opponent, String date, String time) {
         this.teamId = teamId;
         this.opponent = opponent;
@@ -14,7 +13,6 @@ public class Game {
         this.time = time;
         this.tournamentName = tournamentName;
     }
-
     public String getTeamId() {
         return teamId;
     }

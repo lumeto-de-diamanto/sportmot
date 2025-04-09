@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat;
 import com.example.sportmot.R;
 import android.Manifest;
 
-
 public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -26,10 +25,8 @@ public class NotificationReceiver extends BroadcastReceiver {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (notificationManager == null) {
-            return; // Prevent crash if system service is null
+            return;
         }
-
-        // Ensure the notification channel exists (for Android 8+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     channelId,
@@ -39,11 +36,10 @@ public class NotificationReceiver extends BroadcastReceiver {
             notificationManager.createNotificationChannel(channel);
         }
 
-        // Check notification permission (Android 13+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
-                return; // Exit if permission is not granted
+                return;
             }
         }
 
@@ -56,6 +52,6 @@ public class NotificationReceiver extends BroadcastReceiver {
                 .setAutoCancel(true);
 
         // Send the notification
-        notificationManager.notify(1, builder.build()); // Use notificationManager instead of NotificationManagerCompat
+        notificationManager.notify(1, builder.build());
     }
 }

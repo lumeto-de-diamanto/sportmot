@@ -2,101 +2,134 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="350dp"
-    android:layout_height="500dp"
-    android:layout_margin="30dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment">
 
-
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="@android:color/white">
 
-
-        <TextView
-
-            android:id="@+id/formTitle"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Skrá lið á mót"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/teamNameInput"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="Nafn liðs" />
+                android:orientation="vertical">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/formTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="20dp"
+                    android:paddingTop="20dp"
+                    android:text="Skrá lið á mót"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="20dp"
+                    android:paddingTop="20dp"
+                    android:layout_marginBottom="16dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/teamLevelInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Styrkleiki liðs" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/teamNameInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Nafn liðs"
+                        android:minHeight="56dp"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:inputType="textCapSentences|text"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="20dp"
+                    android:paddingTop="20dp"
+                    android:layout_marginBottom="16dp">
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Veldu félag"
-            />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/teamLevelInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Styrkleiki liðs"
+                        android:minHeight="56dp"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:inputType="textCapSentences|text"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <Spinner
-            android:id="@+id/teamClubInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_alignParentTop="true"
-            android:spinnerMode="dropdown"
-            android:popupBackground="@android:color/white"
-        />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Veldu félag"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+                <Spinner
+                    android:id="@+id/teamClubInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:minHeight="64dp"
+                    android:popupBackground="@android:color/white"
+                    android:spinnerMode="dropdown" />
 
-            <Button
-                android:id="@+id/addTeamIcon"
-                android:layout_width="170dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="20dp"
-                android:text="Bæta við mynd (ekki nauðsynlegt)" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="32dp">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_weight="1"
-                tools:src="@tools:sample/avatars" />
-        </LinearLayout>
+                    <Button
+                        android:id="@+id/addTeamIcon"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:text="Bæta við mynd (ekki nauðsynlegt)"
+                        android:textStyle="bold"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="16dp"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="Mynd af liði"
+                        tools:src="@tools:sample/avatars" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/registerTeamButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:text="Skrá lið"
+                    android:layout_marginBottom="24dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </ScrollView>
 
         <Button
-            android:id="@+id/registerTeamButton"
+            android:id="@+id/closeButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:insetBottom="40dp"
-            android:text="Skrá lið"
-
-            />
+            android:layout_height="70dp"
+            android:text="Til baka"
+            android:textStyle="bold"/>
 
     </LinearLayout>
-
 </FrameLayout>

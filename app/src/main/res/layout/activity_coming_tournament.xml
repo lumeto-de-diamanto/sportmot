@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#00BCD4">
 
-
     <TextView
         android:id="@+id/tournament_title"
         android:layout_width="300dp"

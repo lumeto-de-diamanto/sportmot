@@ -11,7 +11,6 @@ public class RetrofitClient {
 
     private static Retrofit retrofit;
     private static final String BASE_URL = "https://sportmot.onrender.com/";
-
     public static Retrofit getClient() {
         if (retrofit == null) {
 
@@ -43,7 +42,6 @@ public class RetrofitClient {
     public static ClubApiService getClubApiService() {
         return getClient().create(ClubApiService.class);
     }
-
     public static TournamentApiService getTournamentApiService(){
         return getClient().create(TournamentApiService.class);
     }

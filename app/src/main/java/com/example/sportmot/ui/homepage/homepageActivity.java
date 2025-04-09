@@ -35,7 +35,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.example.sportmot.ui.subscription.SubscriptionActivity;
 
 public class homepageActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +58,6 @@ public class homepageActivity extends AppCompatActivity {
             Intent intent = new Intent(homepageActivity.this, CurrentTournamentActivity.class);
             startActivity(intent);
         });
-
-
 
         //  Button for Upcoming Tournaments
         Button upcomingButton = findViewById(R.id.naestu_mot);
@@ -117,8 +114,5 @@ public class homepageActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SubscriptionActivity.class);
         startActivity(intent);
     }
-
-
-
 }
 

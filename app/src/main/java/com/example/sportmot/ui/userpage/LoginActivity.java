@@ -18,14 +18,11 @@ import com.example.sportmot.ui.homepage.homepageActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-
 public class LoginActivity extends AppCompatActivity {
 
     private EditText emailEditText, passwordEditText;
     private Button loginButton, signUpRedirectButton;
     private TournamentApiService apiService;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +45,6 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         });
     }
-
     private void attemptLogin() {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
@@ -60,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         Call<String> call = apiService.login(email, password);
-
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -72,22 +67,19 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("user_password", password);
                     editor.apply();
                     LoginActivity.this.finish();
-                    //navigateToHomePage();
                 } else {
                     statusTextView.setText("Invalid credentials. Try again.");
                 }
             }
-
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 statusTextView.setText("Error: " + t.getMessage());
             }
         });
     }
-
     private void navigateToHomePage() {
         Intent intent = new Intent(LoginActivity.this, homepageActivity.class);
         startActivity(intent);
-        finish(); // Close LoginActivity
+        finish();
     }
 }

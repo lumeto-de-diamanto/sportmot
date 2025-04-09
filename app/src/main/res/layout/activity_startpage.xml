@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="#00BCD4">
 
-    <!-- Title TextView centered at the top -->
     <TextView
         android:id="@+id/textView"
         android:layout_width="400dp"
@@ -21,18 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <!-- Button for 'Mín mót' centered below the title -->
-
-    <!-- Button for 'Mót í dag' below 'Mín mót' -->
-
-
-    <!-- Button for 'Næstu mót' below 'Mót í dag' -->
-
-
-    <!-- Button for 'Gömul mót' below 'Næstu mót' -->
-
-    <!-- Button for 'Login/signup' below 'Næstu mót' -->
     <Button
         android:id="@+id/login_page"
         android:layout_width="315dp"
