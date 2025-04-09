@@ -5,11 +5,16 @@ import android.view.View;
 import android.widget.Button;
 import com.example.sportmot.R;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import android.widget.LinearLayout;
 import android.view.LayoutInflater;
+
+import com.example.sportmot.data.entities.User;
+import com.example.sportmot.ui.tournament.fragment.AddLocationFragment;
 import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
 import com.example.sportmot.ui.tournament.fragment.StatisticsFragment;
 import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
@@ -52,8 +57,12 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
                 onBackPressed()
         );
 
+
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         role = prefs.getString("user_role", "");
+
+
+
 
         // Fetch tournaments after today
         fetchUpcomingTournaments();
@@ -161,7 +170,7 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
                 Log.d("UserRoleCheck", "Hiding View team button.");
             } else {
                 Log.d("UserRoleCheck", "Showing View team button.");
-                registerTeamButton.setOnClickListener(v -> showRegisterTeamFragment());
+                registerTeamButton.setOnClickListener(v -> showRegisterTeamFragment(tournament.getId()));
             }
 
             viewStatisticsButton.setOnClickListener(v -> showStatisticsFragment());
@@ -184,19 +193,16 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private void showRegisterTeamFragment() {
-        View container = findViewById(R.id.formFragment); // Use correct ID
-        if (container != null) {
-            container.setVisibility(View.VISIBLE);
-        } else {
-            Log.e("FragmentError", "Fragment container for RegisterTeamFormFragment not found!");
-            return; // Stop execution if the container is missing
-        }
+    private void showRegisterTeamFragment(int tournamentId) {
+        RegisterTeamFormFragment fragment = RegisterTeamFormFragment.newInstance(tournamentId);
+        Log.d("TournamentIdToFragment", "ID being passed: " + tournamentId);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.formFragment, new RegisterTeamFormFragment()) // Correct ID
-                .addToBackStack(null)
-                .commit();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.fragmentContainer, fragment); // Make sure this ID matches your layout
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     // Helper: Format date

@@ -1,5 +1,6 @@
 package com.example.sportmot.ui.tournament.fragment;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.app.Activity;
 import android.content.Intent;
@@ -33,10 +34,21 @@ import com.example.sportmot.api.ImageApiService;
 import com.example.sportmot.api.ImageRetrofitClient;
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.R;
+import com.example.sportmot.api.ScheduleApiService;
+import com.example.sportmot.api.ScheduleRetrofitClient;
 import com.example.sportmot.api.TeamApiService;
 import com.example.sportmot.api.TeamApiService.TeamWithoutClub;
+import com.example.sportmot.api.TeamRegisterApiService;
+import com.example.sportmot.api.TeamRetrofitClient;
+import com.example.sportmot.api.TournamentApiService;
+import com.example.sportmot.data.entities.ChallongeTeamRegister;
+import com.example.sportmot.data.entities.ChallongeTeamRegisterWrapper;
+import com.example.sportmot.data.entities.ChallongeTeamResponse;
+import com.example.sportmot.data.entities.ChallongeTeamWrapper;
 import com.example.sportmot.data.entities.Club;
 import com.example.sportmot.data.entities.Team;
+import com.example.sportmot.data.entities.Tournament;
+import com.example.sportmot.data.entities.User;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.File;
@@ -57,6 +69,11 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -74,11 +91,34 @@ public class RegisterTeamFormFragment extends Fragment {
     private Uri image;
     private File imageFile;
     private String imagePath;
+    private TournamentApiService apiService;
+    private int cId;
+    private int tournamentId;
+
+
+
+
+    public static RegisterTeamFormFragment newInstance(int tournamentId) {
+        RegisterTeamFormFragment fragment = new RegisterTeamFormFragment();
+        Bundle args = new Bundle();
+        args.putInt("TOURNAMENT_ID", tournamentId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Nullable
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            tournamentId = getArguments().getInt("TOURNAMENT_ID");
+            Log.d("FragmentDebug", "Received tournamentId: " + tournamentId);
+        }
+
 
         View view = inflater.inflate(R.layout.fragment_register_form, container, false);
 
@@ -94,10 +134,43 @@ public class RegisterTeamFormFragment extends Fragment {
 
         image = null;
 
-        loadClubs();
 
+        loadClubs();
+        apiService = RetrofitClient.getClient().create(TournamentApiService.class);
+        fetchTournamentDetails(tournamentId);
         return view;
     }
+
+
+    private void fetchTournamentDetails(int tournamentId) {
+        Call<List<Tournament>> call = apiService.getAllTournaments();
+        call.enqueue(new Callback<List<Tournament>>() {
+            @Override
+            public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Tournament> tournaments = response.body();
+
+                    for (Tournament tournament : tournaments) {
+                        if (tournament.getId() == tournamentId) {
+                            cId = tournament.getcId();
+                            Log.d("cIdFetch", "Fetched cId: " + cId);
+                            return;
+                        }
+                    }
+
+                    Log.e("Tournament Lookup", "Tournament ID not found: " + tournamentId);
+                } else {
+                    Log.e("API", "Failed to get tournaments list: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Tournament>> call, Throwable t) {
+                Log.e("API", "Error fetching tournaments", t);
+            }
+        });
+    }
+
 
     private void loadClubs() {
         clubApiService = RetrofitClient.getClubApiService();
@@ -213,6 +286,13 @@ public class RegisterTeamFormFragment extends Fragment {
                 Log.e("Team Registration", "Error: " + t.getMessage());
             }
         });
+
+
+
+        String clubName = teamClub.getName();
+
+
+        registerTeamToChallonge(teamName, clubName,teamLevel, cId);
     }
 
     private void getTeamIdAndUploadIcon(String teamName, String teamLevel) {
@@ -329,6 +409,60 @@ public class RegisterTeamFormFragment extends Fragment {
 
         return cursor.getString(column_index);
     }
+
+    private void registerTeamToChallonge(String teamName, String club, String level, int tournamentCid) {
+        // Store extra information in misc for Challonge. Challonge only needs a team name, but we want to store more data for future use.
+        JSONObject miscJson = new JSONObject();
+        try {
+            miscJson.put("club", club);
+            miscJson.put("level", level);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+
+
+        ChallongeTeamRegister teamRegister = new ChallongeTeamRegister(teamName, miscJson.toString());
+        ChallongeTeamRegisterWrapper wrapper = new ChallongeTeamRegisterWrapper(teamRegister);
+
+        // Directly create the Retrofit instance for this call
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.challonge.com/v1/")  // Base URL for the Challonge API
+                .addConverterFactory(GsonConverterFactory.create())  // Add Gson converter for handling JSON
+                .build();
+
+        // Create the API service for team registration
+        TeamRegisterApiService challongeApi = retrofit.create(TeamRegisterApiService.class);
+
+        // Make the API call to register the team
+        Call<ChallongeTeamResponse> call = challongeApi.registerTeamToChallonge(
+                cId,
+                "tuIVdCZqQmHUhhc4QdjgOpwYLI2T2AAX7eq7lycr",
+                wrapper
+
+        );
+
+        // Enqueue the call to register the team
+        call.enqueue(new Callback<ChallongeTeamResponse>() {
+            @Override
+            public void onResponse(Call<ChallongeTeamResponse> call, Response<ChallongeTeamResponse> response) {
+                if (response.isSuccessful()) {
+                    ChallongeTeamResponse.TeamDetail data = response.body().teamDetail;
+                    Log.d("Challonge", "Team registered to Challonge: " + data.name + " (ID: " + data.id + ")");
+                    // Optionally update UI or show a Toast
+                } else {
+                    Log.e("Challonge", "Error: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChallongeTeamResponse> call, Throwable t) {
+                Log.e("Challonge", "Failed to register team", t);
+            }
+        });
+    }
+
 
 }
 
