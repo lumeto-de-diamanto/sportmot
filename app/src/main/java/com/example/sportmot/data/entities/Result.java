@@ -3,6 +3,10 @@ package com.example.sportmot.data.entities;
 import com.google.gson.annotations.SerializedName;
 
 public class Result {
+    @SerializedName("id")
+    private int matchId;
+    @SerializedName("tournament_id")
+    private int tournamentId;
     @SerializedName("player1_id")
     private int player1Id;
     @SerializedName("player2_id")
@@ -33,6 +37,14 @@ public class Result {
 
     public void setScoresCsv(String scoresCsv) {
         this.scoresCsv = scoresCsv;
+    }
+
+    public int getMatchId() {
+        return matchId;
+    }
+
+    public int getTournamentId() {
+        return tournamentId;
     }
 
     // Helper methods to extract scores if needed

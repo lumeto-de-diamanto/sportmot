@@ -1,11 +1,16 @@
 package com.example.sportmot.ui.tournament.fragment;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,7 +37,8 @@ public class ViewResultsFragment extends Fragment {
 
     private static final String ARG_TOURNAMENT_ID = "tournament_id";
     private int tournamentId;
-    private TextView resultsText;
+    private TextView loadingText;
+    private LinearLayout resultsList;
     private Map<Integer, String> playerNames = new HashMap<>();
     private List<Result> pendingResults = new ArrayList<>();
 
@@ -55,7 +61,8 @@ public class ViewResultsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_view_results, container, false);
 
         Button closeButton = view.findViewById(R.id.closeButton);
-        resultsText = view.findViewById(R.id.results_text); // Make sure this TextView exists in your layout
+        loadingText = view.findViewById(R.id.loading_text); // Make sure this TextView exists in your layout
+        resultsList = view.findViewById(R.id.results_list);
 
         closeButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
@@ -101,13 +108,13 @@ public class ViewResultsFragment extends Fragment {
                     //}
                     //displayResultsWithNames(results);
                 } else {
-                    resultsText.setText("No results found.");
+                    loadingText.setText("No results found.");
                 }
             }
 
             @Override
             public void onFailure(Call<List<MatchWrapper>> call, Throwable t) {
-                resultsText.setText("Failed to load results.");
+                loadingText.setText("Failed to load results.");
                 //Log.e("ViewResults", "Error fetching results", t);
             }
         });
@@ -213,31 +220,95 @@ public class ViewResultsFragment extends Fragment {
             displayResultsWithNames(pendingResults);
         }
     }
+
     private void displayResultsWithNames(List<Result> results) {
-        StringBuilder builder = new StringBuilder();
+        resultsList.removeAllViews();
         for (Result result : results) {
-            //String teamAName = playerNames.get(result.getPlayer1Id());
-            //String teamBName = playerNames.get(result.getPlayer2Id());
+            System.out.println(result);
+            View resultView = LayoutInflater.from(getActivity()).inflate(R.layout.result_item, resultsList, false);
             String teamAName = playerNames.get(result.getPlayer1Id());
             String teamBName = playerNames.get(result.getPlayer2Id());
-            Log.d("ViewResults", "Team A: " + (teamAName != null ? teamAName : "No Name") + ", Team B: " + (teamBName != null ? teamBName : "No Name"));
-            Log.d("ViewResults", "Match between: "
-                    + (teamAName != null ? teamAName : "Player " + result.getPlayer1Id())
-                    + " vs "
-                    + (teamBName != null ? teamBName : "Player " + result.getPlayer2Id()));
 
-            builder.append("Match: ")
-                    .append(teamAName != null ? teamAName : "Player " + result.getPlayer1Id())
-                    .append(" vs ")
-                    .append(teamBName != null ? teamBName : "Player " + result.getPlayer2Id())
-                    .append("\n")
-                    .append("Score: ").append(result.getScore1()).append(" - ").append(result.getScore2())
-                    .append("\n\n");
+            TextView matchText = resultView.findViewById(R.id.matchText);
+            TextView scoreText = resultView.findViewById(R.id.scoreText);
+
+            Button editResultsButton = resultView.findViewById(R.id.button);
+            // Hide button if not admin
+
+            StringBuilder matchStringBuilder = new StringBuilder();
+            matchStringBuilder.append("Match: ");
+            matchStringBuilder.append(teamAName != null ? teamAName : "Player " + result.getPlayer1Id());
+            matchStringBuilder.append(" vs ");
+            matchStringBuilder.append(teamBName != null ? teamBName : "Player " + result.getPlayer2Id());
+            matchText.setText(matchStringBuilder.toString());
+
+            StringBuilder scoreStringBuilder = new StringBuilder();
+            scoreStringBuilder.append("Score: ");
+            scoreStringBuilder.append(result.getScore1()).append(" - ").append(result.getScore2());
+            scoreText.setText(scoreStringBuilder.toString());
+
+            int matchId = result.getMatchId();
+            int tournamentId = result.getTournamentId();
+
+            editResultsButton.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setTitle("Enter Score");
+
+                // Input field for score
+                EditText input = new EditText(requireContext());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                // OK Button - Updates score
+                builder.setPositiveButton("OK", (dialog, which) -> {
+                    String newScore = input.getText().toString();
+                    updateScore(tournamentId, matchId, newScore, scoreText);
+                });
+
+                // Cancel Button
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                builder.show();
+            });
+
+            resultsList.addView(resultView);
         }
-        resultsText.setText(builder.toString());
     }
 
+    public void updateScore(int tournamentId, int matchId, String score, TextView scoreText) {
+        String[] scores = score.split("-");
+        if (scores.length == 2) {
+            try {
+                int Score1 = Integer.parseInt(scores[0]);
+                int Score2 = Integer.parseInt(scores[1]);
+                System.out.println(score);
+                //scoreTextView.setText(newScore);
+                ResultsApiService resultsApiService = ScheduleRetrofitClient
+                        .getClient()
+                        .create(ResultsApiService.class);
+                String apiKey = "tuIVdCZqQmHUhhc4QdjgOpwYLI2T2AAX7eq7lycr";
+                String tournamentIdStr = String.valueOf(tournamentId);
+                String matchIdStr = String.valueOf(matchId);
+                Call<MatchWrapper> call = resultsApiService.updateScore(tournamentIdStr, matchIdStr, score, apiKey);
 
+                call.enqueue(new Callback<MatchWrapper>() {
+                    @Override
+                    public void onResponse(Call<MatchWrapper> call, Response<MatchWrapper> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            //List<ChallongeTeamWrapper> participants = response.body();
+                            System.out.println(response.body());
+                            scoreText.setText("Score: " + Score1 + " - " + Score2);
+                        } else {
+                            Log.e("UpdateScore", "Failed to change score");
+                        }
+                    }
 
+                    @Override
+                    public void onFailure(Call<MatchWrapper> call, Throwable t) {
+                        Log.e("UpdateScore", "Failed to change score", t);
+                    }
+                });
+            } catch (NumberFormatException ignored) {}
+        }
+    }
 
 }
