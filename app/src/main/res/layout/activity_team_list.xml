@@ -5,7 +5,6 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Title -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +14,6 @@
         android:layout_gravity="center_horizontal"
         android:paddingBottom="10dp"/>
 
-    <!-- Team List -->
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"

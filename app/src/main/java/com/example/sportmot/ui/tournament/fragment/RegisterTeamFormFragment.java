@@ -74,7 +74,6 @@ public class RegisterTeamFormFragment extends Fragment {
     private Uri image;
     private File imageFile;
     private String imagePath;
-
     @Nullable
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container,
@@ -92,23 +91,23 @@ public class RegisterTeamFormFragment extends Fragment {
         registerTeamButton.setOnClickListener(v -> registerTeam());
         addIconButton.setOnClickListener(v -> addIcon());
 
+        Button closeButton = view.findViewById(R.id.closeButton);
+        closeButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+
         image = null;
 
         loadClubs();
 
         return view;
     }
-
     private void loadClubs() {
         clubApiService = RetrofitClient.getClubApiService();
         Call<List<Club>> call = clubApiService.getClubs();
-
         call.enqueue(new Callback<List<Club>>() {
             @Override
             public void onResponse(Call<List<Club>> call, Response<List<Club>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Club> clubs = response.body();
-
                     ArrayAdapter<Club> adapter = new ArrayAdapter<Club>(getContext(),
                             android.R.layout.simple_spinner_item, clubs) {
                         @Override
@@ -118,7 +117,6 @@ public class RegisterTeamFormFragment extends Fragment {
                             textView.setText(clubs.get(position).getName());
                             return view;
                         }
-
                         @Override
                         public View getView(int position, View convertView, ViewGroup parent) {
                             View view = super.getView(position, convertView, parent);
@@ -135,15 +133,12 @@ public class RegisterTeamFormFragment extends Fragment {
                     Toast.makeText(getContext(), "Failed to load clubs", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<List<Club>> call, Throwable t) {
                 Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-
     private void registerTeam() {
         String teamName = teamNameInput.getText().toString().trim();
         Club teamClub = (Club) teamClubInput.getSelectedItem();
@@ -153,7 +148,6 @@ public class RegisterTeamFormFragment extends Fragment {
         Log.d("RegisterTeam", "Team Name: " + teamName);
         Log.d("RegisterTeam", "Team Level: " + teamLevel);
         Log.d("RegisterTeam", "Selected Club: " + (teamClub != null ? teamClub.getName() : "None"));
-
 
         // Check if any fields are empty and log the missing ones
         if (teamName.isEmpty()) {
@@ -183,7 +177,6 @@ public class RegisterTeamFormFragment extends Fragment {
 
         TeamApiService apiService = RetrofitClient.getApiService();
         Call<String> call = apiService.createTeam(team);
-
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -196,7 +189,6 @@ public class RegisterTeamFormFragment extends Fragment {
                         getTeamIdAndUploadIcon(team.getTeamName(), team.getLevel());
                     }
 
-                    // Either way, go back to the previous screen
                     requireActivity().getSupportFragmentManager().popBackStack();
                 } else {
                     try {
@@ -285,7 +277,6 @@ public class RegisterTeamFormFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.v("Upload", "success");
                     requireActivity().getSupportFragmentManager().popBackStack();
-
                 }
             }
 
@@ -329,6 +320,5 @@ public class RegisterTeamFormFragment extends Fragment {
 
         return cursor.getString(column_index);
     }
-
 }
 

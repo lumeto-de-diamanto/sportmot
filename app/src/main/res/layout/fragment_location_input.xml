@@ -6,38 +6,35 @@
     android:background="@color/white"
     android:padding="16dp">
 
-
     <TextView
         android:id="@+id/tvEnterAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Settu inn staðsetningu móts:"
         android:textSize="18sp"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"/>
 
     <EditText
         android:id="@+id/etAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Skrifaðu inn staðsetningu"
-        android:inputType="text" />
-
+        android:inputType="text"/>
 
     <Button
         android:id="@+id/btnSaveLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vista staðsetningu"
-        />
+        android:text="Vista staðsetningu"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="16dp" />
+        android:layout_height="16dp"/>
 
     <Button
         android:id="@+id/btnCloseFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Loka" />
+        android:text="Loka"/>
 
 </LinearLayout>

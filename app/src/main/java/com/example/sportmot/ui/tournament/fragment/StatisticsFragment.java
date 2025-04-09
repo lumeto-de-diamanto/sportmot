@@ -16,13 +16,11 @@ import com.example.sportmot.data.entities.TournamentStats;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 public class StatisticsFragment extends Fragment {
 
     private TextView registeredTeams;
     private TextView scheduledMatches;
     private TextView availableFields;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_statistics, container, false);
@@ -41,11 +39,9 @@ public class StatisticsFragment extends Fragment {
 
         return view;
     }
-
     private void fetchTournamentStats() {
         TournamentApiService apiService = RetrofitClient.getClient().create(TournamentApiService.class);
-        Call<TournamentStats> call = apiService.getTournamentStats(); // Ensure this method exists in TournamentApiService
-
+        Call<TournamentStats> call = apiService.getTournamentStats();
         call.enqueue(new Callback<TournamentStats>() {
             @Override
             public void onResponse(Call<TournamentStats> call, Response<TournamentStats> response) {
@@ -58,7 +54,6 @@ public class StatisticsFragment extends Fragment {
                     Toast.makeText(getContext(), "Failed to load data", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<TournamentStats> call, Throwable t) {
                 Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();

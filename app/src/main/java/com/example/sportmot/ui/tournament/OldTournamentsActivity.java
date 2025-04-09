@@ -33,7 +33,6 @@ public class OldTournamentsActivity extends AppCompatActivity {
     private LinearLayout tournamentContainer;
     private String role;
     private ScheduleApiService newApiService;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,13 +52,11 @@ public class OldTournamentsActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         role = prefs.getString("user_role", "");
 
-        //fetchOldTournaments(); // Fetch old tournaments
         fetchTournamentsFromApi();
+        fetchOldTournaments();
     }
-
     private void fetchTournamentsFromApi(){
         String apiKey = "tuIVdCZqQmHUhhc4QdjgOpwYLI2T2AAX7eq7lycr";
-
         newApiService.getTournaments(apiKey).enqueue(new Callback<List<TournamentNewWrapper>>() {
             @Override
             public void onResponse(Call<List<TournamentNewWrapper>> call, Response<List<TournamentNewWrapper>> response) {
@@ -77,7 +74,6 @@ public class OldTournamentsActivity extends AppCompatActivity {
                     tournamentInfo.setText("Failed to load tournament data.");
                 }
             }
-
             @Override
             public void onFailure(Call<List<TournamentNewWrapper>> call, Throwable t) {
                 tournamentInfo.setText("Error fetching tournament data.");
@@ -88,7 +84,7 @@ public class OldTournamentsActivity extends AppCompatActivity {
     private List<Tournament> convertToTournamentList(List<TournamentNew> tournamentsNew) {
         List<Tournament> tournaments = new ArrayList<>();
         for (TournamentNew tournamentNew : tournamentsNew) {
-            // Convert TournamentNew to Tournament (this assumes they have similar fields)
+            // Convert TournamentNew to Tournament
             Tournament tournament = new Tournament();
             tournament.setId(tournamentNew.getId());
             tournament.setTournamentName(tournamentNew.getTournamentName());
@@ -103,11 +99,10 @@ public class OldTournamentsActivity extends AppCompatActivity {
         return tournaments;
     }
 
-
     private List<TournamentNew> extractTournaments(List<TournamentNewWrapper> tournamentWrappers) {
         List<TournamentNew> tournaments = new ArrayList<>();
         for (TournamentNewWrapper wrapper : tournamentWrappers) {
-            tournaments.add(wrapper.getTournament()); // Extract the TournamentNew object
+            tournaments.add(wrapper.getTournament());
         }
         return tournaments;
     }
@@ -186,7 +181,6 @@ public class OldTournamentsActivity extends AppCompatActivity {
 
             name.setText(tournament.getTournamentName());
             details.setText("Start Time: " + tournament.getStartTime() + "\nEnd Time: " + tournament.getEndTime());
-            //details.setText("Date: " + formatDate(tournament.getTournamentDate()));
 
             viewSchedule.setVisibility(View.GONE);
             viewMap.setVisibility(View.GONE);
@@ -204,16 +198,9 @@ public class OldTournamentsActivity extends AppCompatActivity {
 
             tournamentContainer.addView(tournamentView);
         }
-        //StringBuilder info = new StringBuilder();
-        //for (Tournament tournament : tournaments) {
-           // info.append("Tournament: ").append(tournament.getTournamentName())
-            //        .append("\nDate: ").append(formatDate(tournament.getTournamentDate()))
-              //      .append("\n\n");
-        //}
-        //tournamentInfo.setText(info.toString());
     }
 
-    private String formatDate(List<Integer> date) {
+        private String formatDate(List<Integer> date) {
         if (date != null && date.size() == 3) {
             return String.format("%04d-%02d-%02d", date.get(0), date.get(1), date.get(2));
         }

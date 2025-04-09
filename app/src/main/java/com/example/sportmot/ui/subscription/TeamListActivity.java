@@ -12,7 +12,6 @@ import com.example.sportmot.data.entities.Team;
 import java.util.Arrays;
 import java.util.List;
 import com.example.sportmot.R;
-
 public class TeamListActivity extends AppCompatActivity {
 
     private Club ClubA = new Club();
@@ -23,7 +22,6 @@ public class TeamListActivity extends AppCompatActivity {
     );
 
     private SubscriptionManager subscriptionManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

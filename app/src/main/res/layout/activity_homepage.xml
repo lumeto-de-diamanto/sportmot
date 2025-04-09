@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="#00BCD4">
 
-    <!-- Title TextView centered at the top -->
     <TextView
         android:id="@+id/textView"
         android:layout_width="400dp"
@@ -21,8 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <!-- Button for 'Mín mót' centered below the title -->
+    <!-- Mín mót takki -->
     <Button
         android:id="@+id/min_mot"
         android:layout_width="315dp"
@@ -39,7 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView" />
 
-    <!-- Button for 'Mót í dag' below 'Mín mót' -->
+    <!-- Mót í dag takki -->
     <Button
         android:id="@+id/mot_i_dag"
         android:layout_width="315dp"
@@ -55,8 +53,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/min_mot" />
 
-
-    <!-- Button for 'Næstu mót' below 'Mót í dag' -->
+    <!-- Næstu mót takki -->
     <Button
         android:id="@+id/naestu_mot"
         android:layout_width="315dp"
@@ -72,8 +69,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mot_i_dag" />
 
-
-    <!-- Button for 'Gömul mót' below 'Næstu mót' -->
+    <!-- Gömul mót takki -->
     <Button
         android:id="@+id/gomul_mot"
         android:layout_width="315dp"
@@ -89,6 +85,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/naestu_mot" />
 
+    <!-- Log out takki -->
     <Button
         android:id="@+id/log_out"
         android:layout_width="315dp"
@@ -103,9 +100,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gomul_mot" />
-
-    <!-- Button for 'Login/signup' below 'Næstu mót' -->
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

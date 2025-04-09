@@ -27,7 +27,6 @@ public class SignupActivity extends AppCompatActivity {
     private Button signUpButton, loginRedirectButton;
     private RadioGroup roleRadioGroup;
     private TournamentApiService apiService;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +51,6 @@ public class SignupActivity extends AppCompatActivity {
             finish();
         });
     }
-
     private void attemptSignUp() {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
@@ -62,13 +60,12 @@ public class SignupActivity extends AppCompatActivity {
         RadioButton selectedRoleButton = findViewById(selectedRoleId);
         String role = selectedRoleButton.getTag().toString().toLowerCase();
 
-
         if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Create a new User object
+        // Create a new User
         User user = new User(email, name, password, role);
 
         Call<String> call = apiService.signUp(user);
@@ -96,14 +93,12 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Toast.makeText(SignupActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
-
     private void navigateToLogin() {
         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
         startActivity(intent);

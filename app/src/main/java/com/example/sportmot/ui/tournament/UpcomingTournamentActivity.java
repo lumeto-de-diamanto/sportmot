@@ -27,14 +27,11 @@ import retrofit2.Response;
 import java.util.List;
 
 import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
-
-
 public class UpcomingTournamentActivity extends AppCompatActivity {
     private TextView tournamentInfo;
     private TournamentApiService apiService;
     private String role;
     private LinearLayout tournamentContainer;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +119,7 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
         }
         return null;
     }
+    //Show statistics for each tournament
     private void showStatisticsFragment() {
         StatisticsFragment statisticsFragment = new StatisticsFragment();
 
@@ -130,9 +128,9 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
     }
-
+    //Display tournaments
     private void displayTournaments(List<Tournament> tournaments) {
-        tournamentContainer.removeAllViews(); // Clear previous items
+        tournamentContainer.removeAllViews();
 
         for (Tournament tournament : tournaments) {
             View tournamentView = LayoutInflater.from(this).inflate(R.layout.tournament_item, tournamentContainer, false);
@@ -169,7 +167,7 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
             tournamentContainer.addView(tournamentView);
         }
     }
-
+    //Show schedule for each tournament
     private void showScheduleFragment(int tournamentId) {
         View container = findViewById(R.id.ViewGameScheduleFragment);
         if (container != null) {
@@ -183,7 +181,7 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
     }
-
+    //Show fragment to register teams
     private void showRegisterTeamFragment() {
         View container = findViewById(R.id.formFragment); // Use correct ID
         if (container != null) {
@@ -199,7 +197,7 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
                 .commit();
     }
 
-    // Helper: Format date
+    // Helper to Format date
     private String formatDate(List<Integer> date) {
         if (date != null && date.size() == 3) {
             return String.format("%04d-%02d-%02d", date.get(0), date.get(1), date.get(2));
@@ -207,7 +205,7 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
         return "Unknown Date";
     }
 
-    // Helper: Format time
+    // Helper to Format time
     private String formatTime(List<Integer> time) {
         if (time != null && time.size() >= 2) {
             return String.format("%02d:%02d", time.get(0), time.get(1));

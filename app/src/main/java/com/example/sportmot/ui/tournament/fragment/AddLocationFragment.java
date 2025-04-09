@@ -29,16 +29,11 @@ import java.net.URL;
  * the parent fragment. It uses geocoding services to convert the address to long and lat coordinates.
  * These coordinates are saved to the database under the unique tournament ID
  * */
-
 public class AddLocationFragment extends Fragment {
     private EditText editAddress;
     private Button buttonSaveLocation;
-
     private int tournamentID;
-
     public AddLocationFragment() {}
-
-
     public static AddLocationFragment newInstance(int tournamentID) {
         AddLocationFragment fragment = new AddLocationFragment();
         Bundle args = new Bundle();
@@ -46,7 +41,6 @@ public class AddLocationFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,14 +50,12 @@ public class AddLocationFragment extends Fragment {
             Log.d("AddLocationFragment", "Received Tournament ID: " + tournamentID);
         }
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location_input, container, false);
 
         editAddress = view.findViewById(R.id.etAddress);
-
 
         buttonSaveLocation = view.findViewById(R.id.btnSaveLocation);
 
@@ -78,7 +70,6 @@ public class AddLocationFragment extends Fragment {
 
         return view;
     }
-
     private class GeocodeTask extends AsyncTask<String, Void, double[]> {
         @Override
         protected double[] doInBackground(String... addresses) {
@@ -112,7 +103,6 @@ public class AddLocationFragment extends Fragment {
             }
             return coordinates;
         }
-
         @Override
         protected void onPostExecute(double[] coordinates) {
             if (coordinates != null) {

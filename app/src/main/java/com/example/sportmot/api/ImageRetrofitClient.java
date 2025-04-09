@@ -10,7 +10,6 @@ public class ImageRetrofitClient {
 
     private static Retrofit retrofit;
     private static final String BASE_URL = "https://lor54jr.onrender.com/";
-
     public static Retrofit getClient() {
         if (retrofit == null) {
 
@@ -35,7 +34,6 @@ public class ImageRetrofitClient {
         }
         return retrofit;
     }
-
     public static ImageApiService getApiService() {
         return getClient().create(ImageApiService.class);
     }

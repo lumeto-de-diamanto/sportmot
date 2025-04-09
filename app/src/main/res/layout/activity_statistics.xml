@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="#eef">
 
-    <!-- Guideline to center content vertically -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_center"
         android:layout_width="wrap_content"

@@ -7,27 +7,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.example.sportmot.R;
 import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,14 +22,11 @@ import android.widget.TextView;
 import com.example.sportmot.api.RetrofitClient;
 import com.example.sportmot.api.TournamentApiService;
 import com.example.sportmot.data.entities.Tournament;
-
 import com.example.sportmot.ui.tournament.fragment.AddLocationFragment;
 import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
-import com.example.sportmot.ui.tournament.ViewMapActivity;
-
+import com.example.sportmot.ui.tournament.fragment.ViewResultsFragment;
 
 import com.example.sportmot.ui.homepage.NotificationReceiver;
-import com.example.sportmot.ui.tournament.fragment.ViewGameScheduleFragment;
 import com.example.sportmot.ui.tournament.fragment.StatisticsFragment;
 
 import retrofit2.Call;
@@ -50,11 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import java.util.List;
 
-import java.time.LocalDate;
 import java.util.Locale;
-import java.text.ParseException;
-import android.content.Intent;
-
 
 import android.widget.LinearLayout;
 import android.view.LayoutInflater;
@@ -66,7 +46,6 @@ public class CurrentTournamentActivity extends AppCompatActivity {
     private TournamentApiService apiService;
     private String role;
 
-    //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,8 +76,6 @@ public class CurrentTournamentActivity extends AppCompatActivity {
                 scheduleGameNotification(time3);
             }
         }
-
-        //scheduleGameNotification(String);
 
         Button til_baka = findViewById(R.id.til_baka);
         TextView tournament_title = findViewById(R.id.tournament_title);
@@ -189,7 +166,6 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         for (Tournament tournament : tournaments) {
             Calendar tournamentDate = toCalendarDate(tournament.getTournamentDate());
             Calendar startTime = toCalendarTime(tournament.getStartTime());
-            //Calendar startTime = toCalendarTime(tournament.getStartTimeList()); // Use getStartTimeList() instead of getStartTime()
             Calendar endTime = toCalendarTime(tournament.getEndTime());
 
             if (tournamentDate != null && startTime != null && endTime != null) {
@@ -268,7 +244,6 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         }
     }
 
-
     private void openAddLocationFragment(int tournamentID) {
 
         Log.d("TournamentLog", "Opening Add Location Fragment for Tournament ID: " + tournamentID);  // Log when location is added
@@ -283,22 +258,22 @@ public class CurrentTournamentActivity extends AppCompatActivity {
 
     }
 
-
     private void showScheduleFragment(int tournamentId) {
+        Fragment fragment = new ViewGameScheduleFragment();
 
-
-        View container = findViewById(R.id.ViewGameScheduleFragment);
-        if (container != null) {
-            container.setVisibility(View.VISIBLE);
-        } else {
-            Log.e("FragmentError", "Fragment container not found!");
-        }
-
-        //Load the fragment into the container
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.ViewGameScheduleFragment, new ViewGameScheduleFragment())
-                .addToBackStack(null)  // Allow going back
+                .replace(R.id.ViewGameScheduleFragment, fragment)
+                .addToBackStack(null)
                 .commit();
+
+        // Hide all other full-screen containers
+        findViewById(R.id.fragment_container).setVisibility(View.GONE);
+        findViewById(R.id.formFragment).setVisibility(View.GONE);
+        findViewById(R.id.fragmentContainer).setVisibility(View.GONE);
+
+        // Show ViewGameScheduleFragment
+        findViewById(R.id.ViewGameScheduleFragment).setVisibility(View.VISIBLE);
+
     }
 
     private void showMapActivity(int tournamentId) {
@@ -311,7 +286,6 @@ public class CurrentTournamentActivity extends AppCompatActivity {
         // Start the activity
         startActivity(intent);
     }
-
 
     //  Format date from List<Integer> to yyyy-MM-dd
     private String formatDate(List<Integer> date) {
@@ -372,7 +346,7 @@ public class CurrentTournamentActivity extends AppCompatActivity {
     private static int requestCodeCounter = 100; // Start from 100 to avoid conflicts
     private void scheduleNotification(Calendar calendar) {
         Intent intent = new Intent(this, NotificationReceiver.class);
-        int requestCode = requestCodeCounter++; // Unique code
+        int requestCode = requestCodeCounter++;
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 this, requestCode, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);

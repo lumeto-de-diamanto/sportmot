@@ -22,7 +22,6 @@ public class ViewGameScheduleFragment extends Fragment {
 
     private TextView score1, score2, score3;
     private Button editScore1, editScore2, editScore3;
-
     @Override
     public  View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_schedule, container, false);
@@ -59,6 +58,8 @@ public class ViewGameScheduleFragment extends Fragment {
         String time2 = extractTime(game2.getText().toString()); // Extract "14:00"
         String time3 = extractTime(game3.getText().toString()); // Extract "16:00"
 
+        // Tékka hvort þetta þurfi að vera? var að loka dagskrá móts fragment, held að þetta tengist notifications Bryndís??
+
         // Pass times to TournamentActivity
         Intent intent = new Intent(getActivity(), CurrentTournamentActivity.class);
         intent.putExtra("GAME_TIME_1", time1);
@@ -66,15 +67,11 @@ public class ViewGameScheduleFragment extends Fragment {
         intent.putExtra("GAME_TIME_3", time3);
         startActivity(intent);
 
-
         return view;
     }
-
-    // Helper method to extract the HH:mm part from "12:00 - Team A vs Team B"
     private String extractTime(String gameText) {
         return gameText.split(" - ")[0]; // Get only the HH:mm time
     }
-
     private void showEditDialog(TextView scoreTextView) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Enter Score");
