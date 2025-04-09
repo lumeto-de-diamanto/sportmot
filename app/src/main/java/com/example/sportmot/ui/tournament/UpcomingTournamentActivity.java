@@ -26,8 +26,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import java.util.List;
 
-import com.example.sportmot.ui.tournament.fragment.RegisterTeamFormFragment;
-
 
 public class UpcomingTournamentActivity extends AppCompatActivity {
     private TextView tournamentInfo;
@@ -40,7 +38,7 @@ public class UpcomingTournamentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_tournament_list);
-        tournamentInfo = findViewById(R.id.tournament_info);
+        tournamentInfo = findViewById(R.id.loading_text);
         tournamentContainer = findViewById(R.id.tournament_list);
         apiService = RetrofitClient.getClient().create(TournamentApiService.class);
 
