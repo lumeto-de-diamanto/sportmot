@@ -2,6 +2,7 @@ package com.example.sportmot.ui.subscription;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import java.util.HashMap;
 import android.content.SharedPreferences;
@@ -17,8 +18,18 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 import com.example.sportmot.R;
+import com.example.sportmot.api.ScheduleApiService;
+import com.example.sportmot.api.ScheduleRetrofitClient;
+import com.example.sportmot.data.entities.ChallongeMatch;
+import com.example.sportmot.data.entities.ChallongeMatchWrapper;
 import com.example.sportmot.data.entities.Game;
 import com.example.sportmot.ui.subscription.TournamentListActivity;
+
+
+import retrofit2.Callback;
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class SubscriptionActivity extends AppCompatActivity {
     private SubscriptionManager subscriptionManager;
     private LinearLayout gamesLayout;
@@ -31,6 +42,7 @@ public class SubscriptionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscription);
+        fetchMatchesFromChallonge();
 
         subscriptionManager = new SubscriptionManager(this);
         gamesLayout = findViewById(R.id.gamesLayout);
@@ -157,14 +169,17 @@ public class SubscriptionActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        gamesLayout.removeAllViews();
-        Set<String> subscribedTeams = subscriptionManager.getSubscribedTeams();
+        gamesLayout.removeAllViews(); // Clear the layout once
 
-        if (subscribedTeams.isEmpty()) {
-            subscribeButton.setVisibility(View.VISIBLE);
-        } else {
-            subscribeButton.setVisibility(View.GONE);
+        // Fetch and display matches
+        fetchMatchesFromChallonge();
+
+        // Now display subscribed teams
+        Set<String> subscribedTeams = subscriptionManager.getSubscribedTeams();
+        if (!subscribedTeams.isEmpty()) {
             displaySubscribedTeams(new ArrayList<>(subscribedTeams));
+        } else {
+            subscribeButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -177,6 +192,39 @@ public class SubscriptionActivity extends AppCompatActivity {
     public void onSubscribeClicked(View view) {
         Intent intent = new Intent(this, TournamentListActivity.class);
         startActivity(intent);
+    }
+
+    private void fetchMatchesFromChallonge() {
+        ScheduleApiService api = ScheduleRetrofitClient.getApiService();
+        Call<List<ChallongeMatchWrapper>> call = api.getMatches("your_tournament_id", "your_api_key");
+
+        call.enqueue(new Callback<List<ChallongeMatchWrapper>>() {
+            @Override
+            public void onResponse(Call<List<ChallongeMatchWrapper>> call, Response<List<ChallongeMatchWrapper>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<ChallongeMatchWrapper> matchWrappers = response.body();
+
+                    // Display matches
+                    for (ChallongeMatchWrapper wrapper : matchWrappers) {
+                        ChallongeMatch match = wrapper.match;
+
+                        TextView matchTextView = new TextView(SubscriptionActivity.this);
+                        matchTextView.setText("Match: " + match.player1Id + " vs " + match.player2Id);
+                        matchTextView.setTextSize(18);
+                        matchTextView.setTextColor(Color.BLACK);
+                        matchTextView.setPadding(10, 10, 10, 10);
+                        gamesLayout.addView(matchTextView);
+                    }
+                } else {
+                    Log.e("MATCHES", "Failed to get matches");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ChallongeMatchWrapper>> call, Throwable t) {
+                Log.e("MATCHES", "Error: " + t.getMessage());
+            }
+        });
     }
 
 }
